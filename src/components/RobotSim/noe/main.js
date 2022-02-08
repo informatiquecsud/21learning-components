@@ -1,0 +1,1 @@
+sim = new simulation(600,600, 'game', 'map.json')
