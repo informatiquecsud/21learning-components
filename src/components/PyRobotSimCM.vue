@@ -91,6 +91,8 @@ const code = ref("");
 const tab = ref("stdout");
 const stdout = ref("");
 const stdout_counter = ref(0);
+const stderr = ref("");
+const stderr_counter = ref(0);
 
 const pyodideLoaded = ref(false);
 const errorMsg = ref(null);
@@ -145,9 +147,20 @@ const runTestCommand = () => {
   console.log(pyodide.runPython(`import sys\nprint(sys.version)`));
 };
 
+const showError = (msg) => {
+  stderr.value += "------------------------------------------------";
+  stderr.value += msg;
+};
+
 const runCode = () => {
   localStorage.setItem("lastCodeRun", code.value);
-  pyodide.runPython(code.value);
+  pyodide.runPythonAsync(`async_pyodide.__js_run_async(${code.value})`).then(
+    (value) => {},
+    (reason) => {
+      showError(reason);
+    }
+  );
+  // pyodide.runPython(code.value);
 };
 
 const loadLastCode = () => {
