@@ -228,6 +228,8 @@ const showError = (msg) => {
 };
 
 const asyncifyPyCode = (code) => {
+  // TODO: this is really hacky ... should be improved, may be by working with
+  // the ast in pyodide
   return code
     .replaceAll(" def ", "async def ")
     .replaceAll("\ndef ", "\nasync def ")
@@ -265,10 +267,37 @@ const loadLastCode = () => {
   editorFiles.value = JSON.parse(data);
 };
 
+const loadModules = async (prefix, filepaths) => {
+  const headers = new Headers();
+  headers.append("pragma", "no-cache");
+  headers.append("cache-control", "no-cache");
+  filepaths.forEach((p) => {
+    const uri = prefix + p;
+    fetch(uri, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-store",
+    })
+      .then((res) => res.text())
+      .then((text) => {
+        editorFiles.value.push({
+          path: p,
+          data: text,
+        });
+      })
+      .catch((error) => {
+        alert(`Unable to download module from ${uri}`);
+      });
+  });
+};
+
 onMounted(async () => {
   console.log("loading Pyodide");
   await initializePyodide();
   stdout.value = "";
+
+  const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-plus/pyodide-robotsim/`;
+  await loadModules(githubUrl, ["mbrobotplus.py", "delay.py", "microbit.py"]);
 });
 </script>
 
