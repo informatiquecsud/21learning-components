@@ -21,6 +21,7 @@
         <q-tabs
           v-model="activeFile"
           dense
+          no-caps
           class="text-grey"
           active-color="primary"
           indicator-color="primary"
@@ -32,9 +33,14 @@
             :key="index"
             :label="file.path"
           />
-          <q-tab
-            ><q-btn color="primary" icon="add" label="" @click="createFile"
-          /></q-tab>
+          <q-btn
+            class="q-ma-sm"
+            color="white"
+            icon="add"
+            label="New ..."
+            text-color="black"
+            @click="createFile"
+          />
         </q-tabs>
 
         <q-separator />
@@ -222,8 +228,8 @@ const showError = (msg) => {
 
 const asyncifyPyCode = (code) => {
   return code
-    .replaceAll("\ndef ", "\nasync def ")
     .replaceAll(" def ", "async def ")
+    .replaceAll("\ndef ", "\nasync def ")
     .replaceAll("delay(", "await delay(");
 };
 
