@@ -206,6 +206,7 @@ const initializePyodide = async () => {
         },
         stderr: (text) => (stderr.value += text + "\n"),
       });
+      window.pyodide = pyodide;
       console.log("pyodide loading ...", pyodide);
     }
     // load pandas lib
@@ -235,12 +236,7 @@ const asyncifyPyCode = (code) => {
 
 const writeFilesToFS = (files, pyodide) => {
   files.forEach((f) => {
-    const code = `
-with open('${f.path}', 'w', encoding='utf-8') as f:
-  f.write('''${f.data}''')`;
-    console.log("code written to file");
-    console.log(code);
-    pyodide.runPython(code);
+    pyodide.FS.writeFile(f.path, f.data);
   });
 };
 
