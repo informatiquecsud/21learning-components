@@ -3,8 +3,10 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: yarn install
+  - init: |
+      yarn install
+      yarn global add @quasar/cli
+      echo 'export PATH="$(yarn global bin):$PATH"' >> ~/.bashrc
 vscode:
   extensions:
     - dbaeumer.vscode-eslint
-
