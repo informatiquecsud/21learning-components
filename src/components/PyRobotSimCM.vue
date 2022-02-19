@@ -13,6 +13,13 @@
             @click="loadLastCode"
             >Reload</q-btn
           >
+          <q-btn
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="asyncifyPyCode"
+            >Asyncify</q-btn
+          >
           <q-toolbar-title>PyRobotSim</q-toolbar-title>
         </q-toolbar>
       </q-header>
@@ -198,12 +205,7 @@ const initializePyodide = async () => {
       pyodide = await loadPyodide({
         indexURL: languagePluginUrl,
         stdin: window.prompt,
-        stdout: (text) => {
-          console.log(text);
-          stdout.value += text + "\n";
-          stdout_counter.value += 1;
-          console.log("stdout", stdout.value);
-        },
+        stdout: writeToStdout,
         stderr: (text) => (stderr.value += text + "\n"),
       });
       window.pyodide = pyodide;
@@ -218,6 +220,19 @@ const initializePyodide = async () => {
   }
 };
 
+const writeToStdout = (text) => {
+  console.log(text);
+  stdout.value += text + "\n";
+  stdout_counter.value += 1;
+  console.log("stdout", stdout.value);
+};
+
+const writeToStderr = (text) => {
+  console.log(text);
+  stderr.value += text + "\n";
+  console.log("stderr", stderr.value);
+};
+
 const runTestCommand = () => {
   console.log(pyodide.runPython(`import sys\nprint(sys.version)`));
 };
@@ -227,9 +242,18 @@ const showError = (msg) => {
   stderr.value += msg;
 };
 
+const betterAsyncify = (code) => {
+  pyodide.runPythonAsync(`async_pyodide.__js_run_async(${code.value})`).then(
+    (value) => {},
+    (reason) => {
+      writeToStderr(reason);
+    }
+  );
+};
+
 const asyncifyPyCode = (code) => {
-  // TODO: this is really hacky ... should be improved, may be by working with
-  // the ast in pyodide
+  // TODO: this doesn't work ... if delay is in a function, that
+  // function also needs to be async and awaited ...REALLY hard to get right
   return code
     .replaceAll(" def ", "async def ")
     .replaceAll("\ndef ", "\nasync def ")
@@ -250,12 +274,7 @@ const runCode = () => {
   const codeToRun = asyncifyPyCode(editorFiles.value[activeFile.value].data);
 
   console.log("code", codeToRun);
-  // pyodide.runPythonAsync(`async_pyodide.__js_run_async(${code.value})`).then(
-  //   (value) => {},
-  //   (reason) => {
-  //     showError(reason);
-  //   }
-  // );
+
   pyodide.runPythonAsync(codeToRun);
 };
 
