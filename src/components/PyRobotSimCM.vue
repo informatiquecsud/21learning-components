@@ -79,6 +79,7 @@
           <q-tab name="stdout" label="Stdout" />
           <q-tab name="stderr" label="Stderr" />
           <q-tab name="repl" label="REPL" />
+          <q-tab name="asyncifiedCode" label="Async" />
         </q-tabs>
 
         <q-separator />
@@ -92,6 +93,15 @@
             <pre>{{ stderr }}</pre>
           </q-tab-panel>
           <q-tab-panel name="repl"> REPL </q-tab-panel>
+          <q-tab-panel name="asyncifiedCode">
+            <Codemirror
+              v-model:value="asyncCode"
+              :options="{ ...cmOptions, readOnly: true }"
+              border
+              :height="400"
+              @change="change"
+            />
+          </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </template>
@@ -113,6 +123,8 @@ import { useQuasar } from "quasar";
 import Codemirror from "codemirror-editor-vue3";
 // import RobotSim from "./RobotSim/RobotSim.vue";
 import IFrameRobotSim from "./IFrameRobotSim.vue";
+
+import { asyncifyPyCode } from "/src/pyodide/asyncify.js";
 
 const $q = useQuasar();
 
@@ -156,6 +168,7 @@ const editorFiles = ref([
   },
 ]);
 const activeFile = ref(0);
+const asyncCode = ref("");
 
 const cmOptions = {
   mode: "text/x-python", // Language mode
@@ -228,7 +241,6 @@ const writeToStdout = (text) => {
 };
 
 const writeToStderr = (text) => {
-  console.log(text);
   stderr.value += text + "\n";
   console.log("stderr", stderr.value);
 };
@@ -251,31 +263,63 @@ const betterAsyncify = (code) => {
   );
 };
 
-const asyncifyPyCode = (code) => {
-  // TODO: this doesn't work ... if delay is in a function, that
-  // function also needs to be async and awaited ...REALLY hard to get right
-  return code
-    .replaceAll(" def ", "async def ")
-    .replaceAll("\ndef ", "\nasync def ")
-    .replaceAll("delay(", "await delay(");
-};
-
 const writeFilesToFS = (files, pyodide) => {
   files.forEach((f) => {
     pyodide.FS.writeFile(f.path, f.data);
   });
 };
 
-const runCode = () => {
+const runCode = async () => {
+  stdout.value = "";
+  stderr.value = "";
+
   localStorage.setItem("editorFiles", JSON.stringify(editorFiles.value));
 
   writeFilesToFS(editorFiles.value, pyodide);
 
-  const codeToRun = asyncifyPyCode(editorFiles.value[activeFile.value].data);
+  const code = editorFiles.value[activeFile.value].data;
 
-  console.log("code", codeToRun);
+  // const codeToRun = asyncifyPyCode(editorFiles.value[activeFile.value].data);
 
-  pyodide.runPythonAsync(codeToRun);
+  // asyncifyPyCode(code, pyodide).then(
+  //   (value) => {
+  //     const codeToRun = value;
+  //     asyncCode.value = codeToRun;
+  //     console.log("code to run", codeToRun);
+  //     pyodide.runPythonAsync(codeToRun);
+  //   },
+  //   (reason) => {
+  //     writeToStderr(`Error while converting code to async code: ${reason}`);
+  //   }
+  // );
+  let codeToRun;
+  try {
+    codeToRun = await asyncifyPyCode(code, pyodide);
+    asyncCode.value = codeToRun;
+    console.log("res", codeToRun);
+  } catch (error) {
+    writeToStderr(`Error while converting code to async code: \n${error}`);
+    tab.value = "stderr";
+  }
+
+  try {
+    const res = await pyodide.runPythonAsync(codeToRun);
+  } catch (error) {
+    writeToStderr(`Error while running code on virtual robot.\n${error}`);
+    tab.value = "stderr";
+  }
+
+  // .then(
+  //   (value) => {
+  //     const codeToRun = value;
+  //     asyncCode.value = codeToRun;
+  //     console.log("code to run", codeToRun);
+  //     pyodide.runPythonAsync(codeToRun);
+  //   },
+  //   (reason) => {
+  //     writeToStderr(`Error while converting code to async code: ${reason}`);
+  //   }
+  // );
 };
 
 const loadLastCode = () => {
