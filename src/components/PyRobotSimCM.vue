@@ -20,6 +20,13 @@
             @click="asyncifyPyCode"
             >Asyncify</q-btn
           >
+          <q-btn
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="shareAsURL"
+            >Share</q-btn
+          >
           <q-toolbar-title>PyRobotSim</q-toolbar-title>
         </q-toolbar>
       </q-header>
@@ -118,6 +125,7 @@
 
 <script setup>
 import { defineProps, ref, reactive, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { loadScript } from "vue-plugin-load-script";
 import { useQuasar } from "quasar";
 import Codemirror from "codemirror-editor-vue3";
@@ -160,6 +168,9 @@ function createFile() {
       // console.log('I am triggered on both OK and Cancel')
     });
 }
+
+const route = useRoute();
+const router = useRouter();
 
 const editorFiles = ref([
   {
@@ -330,6 +341,10 @@ const loadLastCode = () => {
   editorFiles.value = JSON.parse(data);
 };
 
+const shareAsURL = () => {
+  router.replace({ query: { main: btoa(editorFiles.value[0].data) } });
+};
+
 const loadModules = async (prefix, filepaths) => {
   const headers = new Headers();
   headers.append("pragma", "no-cache");
@@ -358,6 +373,10 @@ onMounted(async () => {
   console.log("loading Pyodide");
   await initializePyodide();
   stdout.value = "";
+
+  if (route.query.main !== undefined) {
+    editorFiles.value[0].data = atob(route.query.main);
+  }
 
   const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-plus/pyodide-robotsim/`;
   await loadModules(githubUrl, ["mbrobotplus.py", "delay.py", "microbit.py"]);
