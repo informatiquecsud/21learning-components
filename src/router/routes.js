@@ -7,6 +7,10 @@ const routes = [
         path: "PyRobotSim",
         component: () => import("components/PyRobotSimCM.vue"),
       },
+      // {
+      //   path: "PyListsAsCards",
+      //   component: () => import("components/PyListsAsCards.vue"),
+      // },
     ],
   },
   {

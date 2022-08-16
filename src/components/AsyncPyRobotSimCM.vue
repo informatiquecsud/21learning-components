@@ -53,7 +53,7 @@
 
     <template v-slot:after
       ><i-frame-robot-sim
-        src="robotsim1/TM_code/index.html"
+        src="robotsim1/index.html"
         :width="700"
         :height="700"
       ></i-frame-robot-sim>

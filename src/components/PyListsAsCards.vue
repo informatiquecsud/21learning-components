@@ -115,9 +115,9 @@
 
     <template v-slot:after
       ><i-frame-robot-sim
-        src="robotsim1/index.html"
-        :width="900"
-        :height="900"
+        src="robotsim1/TM_code/index.html"
+        :width="700"
+        :height="700"
       ></i-frame-robot-sim>
     </template>
   </q-splitter>
@@ -132,7 +132,7 @@ import Codemirror from "codemirror-editor-vue3";
 // import RobotSim from "./RobotSim/RobotSim.vue";
 import IFrameRobotSim from "./IFrameRobotSim.vue";
 
-import { asyncifyPyCode } from "/public/pyodide/asyncify.js";
+import { asyncifyPyCode } from "/src/pyodide/asyncify.js";
 
 const $q = useQuasar();
 
