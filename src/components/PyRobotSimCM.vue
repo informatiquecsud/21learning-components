@@ -1,88 +1,95 @@
 <template>
   <q-splitter v-model="vSplitterLocation">
     <template v-slot:before>
-      <q-splitter horizontal v-model="hSplitterLocation">
+      <q-header elevated>
+        <q-toolbar>
+          <q-btn color="green" class="q-ma-sm" @click="runCode"
+            >Save & Run</q-btn
+          >
+          <q-btn
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="loadLastCode"
+            >Reload</q-btn
+          >
+          <q-btn
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="asyncifyPyCode"
+            >Asyncify</q-btn
+          >
+          <q-btn
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="shareAsURL"
+            >Share</q-btn
+          >
+          <q-toolbar-title>PyRobotSim</q-toolbar-title>
+        </q-toolbar>
+      </q-header>
+
+      <div style="height: 100%">
+        <q-tabs
+          v-model="activeFile"
+          dense
+          no-caps
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+        >
+          <q-tab
+            v-for="(file, index) in editorFiles"
+            :name="index"
+            :key="index"
+            :label="file.path"
+          />
+          <q-btn
+            class="q-ma-sm"
+            color="white"
+            icon="add"
+            label="New ..."
+            text-color="black"
+            @click="createFile"
+          />
+        </q-tabs>
+
+        <q-separator />
+
+        <q-tab-panels v-model="activeFile" animated>
+          <Codemirror
+            v-for="(file, index) in editorFiles"
+            :name="index"
+            :key="index"
+            v-model:value="editorFiles[index].data"
+            :options="cmOptions"
+            border
+            placeholder="test placeholder"
+            :style="{
+              minHeight: '800px',
+              maxHeight: '800px',
+            }"
+            @change="change"
+          />
+        </q-tab-panels>
+      </div>
+    </template>
+
+    <template v-slot:after>
+      <q-splitter horizontal unit="px" v-model="hSplitterLocation">
         <template v-slot:before>
-          <q-header elevated>
-            <q-toolbar>
-              <q-btn color="green" class="q-ma-sm" @click="runCode"
-                >Save & Run</q-btn
-              >
-              <q-btn
-                color="white"
-                text-color="black"
-                class="q-ma-sm"
-                @click="loadLastCode"
-                >Reload</q-btn
-              >
-              <q-btn
-                color="white"
-                text-color="black"
-                class="q-ma-sm"
-                @click="asyncifyPyCode"
-                >Asyncify</q-btn
-              >
-              <q-btn
-                color="white"
-                text-color="black"
-                class="q-ma-sm"
-                @click="shareAsURL"
-                >Share</q-btn
-              >
-              <q-toolbar-title>PyRobotSim</q-toolbar-title>
-            </q-toolbar>
-          </q-header>
-
-          <div style="height: 100%">
-            <q-tabs
-              v-model="activeFile"
-              dense
-              no-caps
-              class="text-grey"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-            >
-              <q-tab
-                v-for="(file, index) in editorFiles"
-                :name="index"
-                :key="index"
-                :label="file.path"
-              />
-              <q-btn
-                class="q-ma-sm"
-                color="white"
-                icon="add"
-                label="New ..."
-                text-color="black"
-                @click="createFile"
-              />
-            </q-tabs>
-
-            <q-separator />
-
-            <q-tab-panels v-model="activeFile" animated>
-              <Codemirror
-                v-for="(file, index) in editorFiles"
-                :name="index"
-                :key="index"
-                v-model:value="editorFiles[index].data"
-                :options="cmOptions"
-                border
-                placeholder="test placeholder"
-                :style="{
-                  height: '100%',
-                  minWidth: '300px',
-                  maxWidth: '600px',
-                }"
-                @change="change"
-              />
-            </q-tab-panels>
-          </div>
+          <i-frame-robot-sim
+            src="robotsim1/index.html"
+            :width="700"
+            :height="600"
+          ></i-frame-robot-sim>
         </template>
 
         <template v-slot:after>
-          <div style="height: 100%">
+          <div>
             <q-tabs
               v-model="tab"
               dense
@@ -99,7 +106,7 @@
 
             <q-separator />
 
-            <q-tab-panels v-model="tab" animated>
+            <q-tab-panels style="max-height: 200px" v-model="tab" animated>
               <q-tab-panel name="stdout">
                 <PyStdout :stdout="stdout"></PyStdout>
               </q-tab-panel>
@@ -121,14 +128,6 @@
           </div>
         </template>
       </q-splitter>
-    </template>
-
-    <template v-slot:after
-      ><i-frame-robot-sim
-        src="robotsim1/index.html"
-        :width="900"
-        :height="900"
-      ></i-frame-robot-sim>
     </template>
   </q-splitter>
 </template>
@@ -204,7 +203,7 @@ const cmOptions = {
 };
 const props = defineProps({});
 const vSplitterLocation = ref(50);
-const hSplitterLocation = ref(20);
+const hSplitterLocation = ref(600);
 const code = ref("");
 const tab = ref("stdout");
 const stdout = ref("");

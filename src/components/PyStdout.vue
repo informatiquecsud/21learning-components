@@ -3,9 +3,11 @@
     ref="stdoutScrollArea"
     dark
     :visible="visible"
-    :style="{ height: `${500}px` }"
+    :style="{ height: `${250}px` }"
   >
-    <pre class="q-pb-lg" :style="{ maxWidth: '90%' }">{{ stdout }}</pre>
+    <pre class="q-pb-lg" :style="{ maxWidth: '100%' }">{{
+      stdout + "\n\n\n\n"
+    }}</pre>
   </q-scroll-area>
 </template>
 
