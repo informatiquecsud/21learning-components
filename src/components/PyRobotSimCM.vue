@@ -1,116 +1,126 @@
 <template>
-  <q-splitter v-model="splitterLocation">
+  <q-splitter v-model="vSplitterLocation">
     <template v-slot:before>
-      <q-header elevated>
-        <q-toolbar>
-          <q-btn color="green" class="q-ma-sm" @click="runCode"
-            >Save & Run</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="loadLastCode"
-            >Reload</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="asyncifyPyCode"
-            >Asyncify</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="shareAsURL"
-            >Share</q-btn
-          >
-          <q-toolbar-title>PyRobotSim</q-toolbar-title>
-        </q-toolbar>
-      </q-header>
+      <q-splitter horizontal v-model="hSplitterLocation">
+        <template v-slot:before>
+          <q-header elevated>
+            <q-toolbar>
+              <q-btn color="green" class="q-ma-sm" @click="runCode"
+                >Save & Run</q-btn
+              >
+              <q-btn
+                color="white"
+                text-color="black"
+                class="q-ma-sm"
+                @click="loadLastCode"
+                >Reload</q-btn
+              >
+              <q-btn
+                color="white"
+                text-color="black"
+                class="q-ma-sm"
+                @click="asyncifyPyCode"
+                >Asyncify</q-btn
+              >
+              <q-btn
+                color="white"
+                text-color="black"
+                class="q-ma-sm"
+                @click="shareAsURL"
+                >Share</q-btn
+              >
+              <q-toolbar-title>PyRobotSim</q-toolbar-title>
+            </q-toolbar>
+          </q-header>
 
-      <q-card>
-        <q-tabs
-          v-model="activeFile"
-          dense
-          no-caps
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
-          <q-tab
-            v-for="(file, index) in editorFiles"
-            :name="index"
-            :key="index"
-            :label="file.path"
-          />
-          <q-btn
-            class="q-ma-sm"
-            color="white"
-            icon="add"
-            label="New ..."
-            text-color="black"
-            @click="createFile"
-          />
-        </q-tabs>
+          <div style="height: 100%">
+            <q-tabs
+              v-model="activeFile"
+              dense
+              no-caps
+              class="text-grey"
+              active-color="primary"
+              indicator-color="primary"
+              align="justify"
+            >
+              <q-tab
+                v-for="(file, index) in editorFiles"
+                :name="index"
+                :key="index"
+                :label="file.path"
+              />
+              <q-btn
+                class="q-ma-sm"
+                color="white"
+                icon="add"
+                label="New ..."
+                text-color="black"
+                @click="createFile"
+              />
+            </q-tabs>
 
-        <q-separator />
+            <q-separator />
 
-        <q-tab-panels v-model="activeFile" animated>
-          <Codemirror
-            v-for="(file, index) in editorFiles"
-            :name="index"
-            :key="index"
-            v-model:value="editorFiles[index].data"
-            :options="cmOptions"
-            border
-            placeholder="test placeholder"
-            :height="400"
-            @change="change"
-          />
-        </q-tab-panels>
-      </q-card>
+            <q-tab-panels v-model="activeFile" animated>
+              <Codemirror
+                v-for="(file, index) in editorFiles"
+                :name="index"
+                :key="index"
+                v-model:value="editorFiles[index].data"
+                :options="cmOptions"
+                border
+                placeholder="test placeholder"
+                :style="{
+                  height: '100%',
+                  minWidth: '300px',
+                  maxWidth: '600px',
+                }"
+                @change="change"
+              />
+            </q-tab-panels>
+          </div>
+        </template>
 
-      <q-card>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
-          <q-tab name="stdout" label="Stdout" />
-          <q-tab name="stderr" label="Stderr" />
-          <q-tab name="repl" label="REPL" />
-          <q-tab name="asyncifiedCode" label="Async" />
-        </q-tabs>
+        <template v-slot:after>
+          <div style="height: 100%">
+            <q-tabs
+              v-model="tab"
+              dense
+              class="text-grey"
+              active-color="primary"
+              indicator-color="primary"
+              align="justify"
+            >
+              <q-tab name="stdout" label="Stdout" />
+              <q-tab name="stderr" label="Stderr" />
+              <q-tab name="repl" label="REPL" />
+              <q-tab name="asyncifiedCode" label="Async" />
+            </q-tabs>
 
-        <q-separator />
+            <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="stdout">
-            <PyStdout :stdout="stdout"></PyStdout>
-          </q-tab-panel>
+            <q-tab-panels v-model="tab" animated>
+              <q-tab-panel name="stdout">
+                <PyStdout :stdout="stdout"></PyStdout>
+              </q-tab-panel>
 
-          <q-tab-panel name="stderr">
-            <pre>{{ stderr }}</pre>
-          </q-tab-panel>
-          <q-tab-panel name="repl"> REPL </q-tab-panel>
-          <q-tab-panel name="asyncifiedCode">
-            <Codemirror
-              v-model:value="asyncCode"
-              :options="{ ...cmOptions, readOnly: true }"
-              border
-              :height="400"
-              @change="change"
-            />
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
+              <q-tab-panel name="stderr">
+                <pre>{{ stderr }}</pre>
+              </q-tab-panel>
+              <q-tab-panel name="repl"> REPL </q-tab-panel>
+              <q-tab-panel name="asyncifiedCode">
+                <Codemirror
+                  v-model:value="asyncCode"
+                  :options="{ ...cmOptions, readOnly: true }"
+                  border
+                  :height="'100%'"
+                  @change="change"
+                />
+              </q-tab-panel>
+            </q-tab-panels>
+          </div>
+        </template>
+      </q-splitter>
     </template>
 
     <template v-slot:after
@@ -193,7 +203,8 @@ const cmOptions = {
   styleActiveLine: true, // Display the style of the selected row
 };
 const props = defineProps({});
-const splitterLocation = ref(50);
+const vSplitterLocation = ref(50);
+const hSplitterLocation = ref(20);
 const code = ref("");
 const tab = ref("stdout");
 const stdout = ref("");

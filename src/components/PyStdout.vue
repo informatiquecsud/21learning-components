@@ -1,10 +1,11 @@
 <template>
   <q-scroll-area
     ref="stdoutScrollArea"
-    :dark="true"
+    dark
+    :visible="visible"
     :style="{ height: `${500}px` }"
   >
-    <pre>{{ stdout }}</pre>
+    <pre class="q-pb-lg" :style="{ maxWidth: '90%' }">{{ stdout }}</pre>
   </q-scroll-area>
 </template>
 
@@ -15,6 +16,8 @@ const props = defineProps({
   stdout: String,
 });
 
+const visible = true;
+
 const stdoutProp = ref(props.stdout);
 const stdoutScrollArea = ref(null);
 
@@ -24,7 +27,7 @@ watch(
   () => props.stdout,
   (newValue, oldValue) => {
     console.log("stdout changed");
-    stdoutScrollArea.value.setScrollPercentage("vertical", 120);
+    stdoutScrollArea.value.setScrollPercentage("vertical", 1.0);
   }
 );
 </script>
