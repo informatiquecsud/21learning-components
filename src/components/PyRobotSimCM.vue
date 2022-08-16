@@ -93,7 +93,7 @@
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="stdout">
-            <pre :key="stdout_counter">{{ stdout }}</pre>
+            <PyStdout :stdout="stdout"></PyStdout>
           </q-tab-panel>
 
           <q-tab-panel name="stderr">
@@ -131,6 +131,8 @@ import { useQuasar } from "quasar";
 import Codemirror from "codemirror-editor-vue3";
 // import RobotSim from "./RobotSim/RobotSim.vue";
 import IFrameRobotSim from "./IFrameRobotSim.vue";
+
+import PyStdout from "./PyStdout.vue";
 
 import { asyncifyPyCode } from "/public/pyodide/asyncify.js";
 
