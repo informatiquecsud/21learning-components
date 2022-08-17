@@ -69,8 +69,7 @@
             border
             placeholder="test placeholder"
             :style="{
-              minHeight: '800px',
-              maxHeight: '800px',
+              height: '800px',
             }"
             @change="change"
           />
@@ -84,7 +83,7 @@
           <i-frame-robot-sim
             src="robotsim1/index.html"
             :width="700"
-            :height="600"
+            :height="hSplitterLocation"
           ></i-frame-robot-sim>
         </template>
 
