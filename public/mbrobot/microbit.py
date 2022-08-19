@@ -48,6 +48,8 @@ if _platform == 'pyodide':
     iframe = document.querySelector('iframe.robotsim-container')
     sim_globals = iframe.contentWindow
     sim = sim_globals.sim
+    game = sim.game
+    scene = game.scene.scenes[0]
     robot = sim.robots[0]
     bot_i2c = robot.i2c
     i2c = I2C()
