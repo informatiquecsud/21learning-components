@@ -187,7 +187,7 @@ result = __asyncify_sleep_delay(code_to_compile,compile_mode='exec')
 __strip_async_main(result)
 `;
 
-  console.log("conversion code", asyncifyCode);
+  //console.log("conversion code", asyncifyCode);
 
   return pyodide.runPythonAsync(
     asyncifyCode,

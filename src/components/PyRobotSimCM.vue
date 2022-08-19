@@ -42,8 +42,8 @@
           align="justify"
         >
           <q-tab
-            v-for="(file, index) in editorFiles"
-            :name="index"
+            v-for="(file, index) in editorFiles.filter((f) => f.show)"
+            :name="file.path"
             :key="index"
             :label="file.path"
           />
@@ -58,20 +58,20 @@
         </q-tabs>
 
         <q-separator />
-
+        <pre v-if="false">{{ editorFiles }}</pre>
         <q-tab-panels v-model="activeFile" animated>
           <Codemirror
             v-for="(file, index) in editorFiles"
-            :name="index"
             :key="index"
-            v-model:value="editorFiles[index].data"
+            :name="file.path"
+            v-model:value="file.data"
             :options="cmOptions"
             border
             placeholder="test placeholder"
             :style="{
               height: '800px',
             }"
-            @change="change"
+            @change="onEditorChange"
           />
         </q-tab-panels>
       </div>
@@ -132,7 +132,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, reactive, onMounted } from "vue";
+import { defineProps, ref, reactive, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { loadScript } from "vue-plugin-load-script";
 import { useQuasar } from "quasar";
@@ -186,9 +186,10 @@ const editorFiles = ref([
   {
     path: "main.py",
     data: "",
+    show: true,
   },
 ]);
-const activeFile = ref(0);
+const activeFile = ref("main.py");
 const asyncCode = ref("");
 
 const cmOptions = {
@@ -216,7 +217,7 @@ const errorMsg = ref(null);
 let pyodide = null;
 
 const LOCAL_PYODIDE = false;
-const PYODIDE_VERSION = "v0.19.0";
+const PYODIDE_VERSION = "v0.20.0";
 
 const initializePyodide = async () => {
   try {
@@ -298,8 +299,9 @@ const runCode = async () => {
   localStorage.setItem("editorFiles", JSON.stringify(editorFiles.value));
 
   writeFilesToFS(editorFiles.value, pyodide);
+  console.log("files", editorFiles.value);
 
-  const code = editorFiles.value[activeFile.value].data;
+  const code = getActiveFile(activeFile.value).data;
 
   // const codeToRun = asyncifyPyCode(editorFiles.value[activeFile.value].data);
 
@@ -318,7 +320,7 @@ const runCode = async () => {
   try {
     codeToRun = await asyncifyPyCode(code, pyodide);
     asyncCode.value = codeToRun;
-    console.log("res", codeToRun);
+    //console.log("res", codeToRun);
   } catch (error) {
     writeToStderr(`Error while converting code to async code: \n${error}`);
     tab.value = "stderr";
@@ -356,12 +358,12 @@ const shareAsURL = () => {
   router.replace({ query: { main: btoa(editorFiles.value[0].data) } });
 };
 
-const loadModules = async (prefix, filepaths) => {
+const loadModules = async (prefix, files) => {
   const headers = new Headers();
   headers.append("pragma", "no-cache");
   headers.append("cache-control", "no-cache");
-  filepaths.forEach((p) => {
-    const uri = prefix + p;
+  files.forEach((f) => {
+    const uri = prefix + f.path;
     fetch(uri, {
       method: "GET",
       mode: "cors",
@@ -370,8 +372,9 @@ const loadModules = async (prefix, filepaths) => {
       .then((res) => res.text())
       .then((text) => {
         editorFiles.value.push({
-          path: p,
+          path: f.path,
           data: text,
+          show: f.show,
         });
       })
       .catch((error) => {
@@ -379,6 +382,11 @@ const loadModules = async (prefix, filepaths) => {
       });
   });
 };
+
+const onEditorChange = () => {};
+
+const getActiveFile = (path) =>
+  editorFiles.value.find((file) => file.path === activeFile.value);
 
 onMounted(async () => {
   console.log("loading Pyodide");
@@ -390,7 +398,16 @@ onMounted(async () => {
   }
 
   const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
-  await loadModules(githubUrl, ["mbrobot.py", "delay.py", "microbit.py"]);
+  const localUrl = `/mbrobot/`;
+  await loadModules(localUrl, [
+    { path: "mbrobot.py", show: false },
+    { path: "mbrobot2.py", show: true },
+    { path: "delay.py", show: false },
+    { path: "microbit.py", show: true },
+    { path: "mbrobotmot.py", show: false },
+    { path: "mbalarm.py", show: true },
+    { path: "music.py", show: true },
+  ]);
 });
 </script>
 
