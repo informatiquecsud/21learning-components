@@ -33,4 +33,4 @@ yarn-error.log*
 *.sln
 
 # robot simulator
-public/robotsim1/
+# public/robotsim1/
