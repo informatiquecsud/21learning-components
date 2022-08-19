@@ -81,7 +81,7 @@
       <q-splitter horizontal unit="px" v-model="hSplitterLocation">
         <template v-slot:before>
           <i-frame-robot-sim
-            src="robotsim1/index.html"
+            :src="`robotsim1/index.html?${robotsimQueryParams}`"
             :width="700"
             :height="hSplitterLocation"
           ></i-frame-robot-sim>
@@ -358,6 +358,16 @@ const shareAsURL = () => {
   router.replace({ query: { main: btoa(editorFiles.value[0].data) } });
 };
 
+const robotsimQueryParams = computed(() => {
+  const queryParams = {
+    world: route.query.world,
+  };
+
+  return Object.entries(queryParams)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+});
+
 const loadModules = async (prefix, files) => {
   const headers = new Headers();
   headers.append("pragma", "no-cache");
@@ -407,6 +417,10 @@ onMounted(async () => {
     { path: "mbrobotmot.py", show: false },
     { path: "mbalarm.py", show: true },
     { path: "music.py", show: true },
+    { path: "worlds.py", show: true },
+
+    // virtual worlds
+    { path: "simple_trail.py", show: false },
   ]);
 });
 </script>
