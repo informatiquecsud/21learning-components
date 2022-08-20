@@ -1,5 +1,5 @@
 <template>
-  <q-splitter v-model="vSplitterLocation">
+  <q-splitter v-model="vSplitterLocation" :limits="[0, 100]">
     <template v-slot:before>
       <q-header elevated>
         <q-toolbar>
@@ -355,7 +355,8 @@ const loadLastCode = () => {
 };
 
 const shareAsURL = () => {
-  router.replace({ query: { main: btoa(editorFiles.value[0].data) } });
+  const queryParams = { ...route.query, main: btoa(editorFiles.value[0].data) };
+  router.replace({ query: queryParams });
 };
 
 const robotsimQueryParams = computed(() => {
@@ -413,11 +414,11 @@ onMounted(async () => {
     { path: "mbrobot.py", show: false },
     { path: "mbrobot2.py", show: true },
     { path: "delay.py", show: false },
-    { path: "microbit.py", show: true },
+    { path: "microbit.py", show: false },
     { path: "mbrobotmot.py", show: false },
-    { path: "mbalarm.py", show: true },
-    { path: "music.py", show: true },
-    { path: "worlds.py", show: true },
+    { path: "mbalarm.py", show: false },
+    { path: "music.py", show: false },
+    { path: "worlds.py", show: false },
 
     // virtual worlds
     { path: "simple_trail.py", show: false },

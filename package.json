@@ -9,7 +9,8 @@
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "get-robotsim": "rsync -raz /home/donnerc/dev/tm/TM_Noe/TM_code/* public/robotsim1/"
+    "get-robotsim": "rsync -raz /home/donnerc/dev/tm/TM_Noe/TM_code/* public/robotsim1/",
+    "surge": "quasar build && surge dist/spa/ 21learning-components.surge.sh"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

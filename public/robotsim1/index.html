@@ -14,7 +14,7 @@
     </style>
   </head>
   <body>
-    <h3>Monde virtuel vierge</h3>
+    <h3>Virtual world : <code id="worldName">{worldName}</code></h3>
     <canvas id="simulation"></canvas>
   </body>
 
@@ -30,6 +30,7 @@
   <script>
     const url = new URL(window.location.href);
     const worldToLoad = url.searchParams.get("world") || "emptyWorld";
+    document.getElementById("worldName").innerText = worldToLoad;
     const worldScript = document.createElement("script");
     worldScript.setAttribute("src", "worlds/" + worldToLoad + ".js");
     document.body.appendChild(worldScript);

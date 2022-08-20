@@ -33,6 +33,12 @@ function mapCreate(scene) {
   follow_line(scene);
 }
 
+function sceneCreated({ overlayScene, robots }) {
+  overlayScene.freeMode();
+  overlayScene.camera.scrollY -= 200;
+  overlayScene.camera.scrollX += 400;
+}
+
 // simulation(width, height, id, mapLoad, mapCreate, zoom, mouse);
 sim = new simulation({
   width: 700,
@@ -40,6 +46,7 @@ sim = new simulation({
   id: "simulation",
   mapLoad,
   mapCreate,
+  sceneCreated,
   zoom: 0.6,
   mouse: 1,
 });

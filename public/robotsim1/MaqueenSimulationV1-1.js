@@ -19,24 +19,23 @@ class simulation {
     this.walls = [];
     this.marks = [];
     this.zones = [];
+    this.robotScene = new Simul(
+      this.robots,
+      this.walls,
+      this.marks,
+      this.zones,
+      mapLoad,
+      mapCreate,
+      mouse
+    );
+    this.overlayScene = new Over(height, zoom);
     this.game = new Phaser.Game({
       width: width,
       height: height,
       backgroundColor: background,
       type: Phaser.WEBGL,
       canvas: document.getElementById(id),
-      scene: [
-        new Simul(
-          this.robots,
-          this.walls,
-          this.marks,
-          this.zones,
-          mapLoad,
-          mapCreate,
-          mouse
-        ),
-        new Over(height, zoom),
-      ],
+      scene: [this.robotScene, this.overlayScene],
       physics: {
         default: "matter",
         matter: {
@@ -55,8 +54,16 @@ class simulation {
       },
     });
     this.scenes = this.game.scene.scenes;
+
+    // very hackily handle the fact that scene instantiation is async
     if (sceneCreated !== undefined) {
-      sceneCreated(this);
+      let sceneCreatedInterval = undefined;
+      sceneCreatedInterval = setInterval(() => {
+        if (this.scenes.length == 2 && this.overlayScene.cursor) {
+          clearInterval(sceneCreatedInterval);
+          sceneCreated(this);
+        }
+      }, 500);
     }
   }
 
@@ -128,26 +135,26 @@ class Simul extends Phaser.Scene {
     this.mouse = mouse;
   }
 
-  preload() {
-    this.load.json("liteShape", "assets/liteShape.json");
-    this.load.json("plusShape", "assets/plusShape.json");
+  async preload() {
+    await this.load.json("liteShape", "assets/liteShape.json");
+    await this.load.json("plusShape", "assets/plusShape.json");
 
-    this.load.spritesheet("liteBodyPic", "assets/liteBody.png", {
+    await this.load.spritesheet("liteBodyPic", "assets/liteBody.png", {
       frameWidth: 80,
       frameHeight: 80,
     });
-    this.load.spritesheet("plusBodyPic", "assets/plusBody.png", {
+    await this.load.spritesheet("plusBodyPic", "assets/plusBody.png", {
       frameWidth: 100,
       frameHeight: 103,
     });
 
-    this.mapLoad(this);
+    await this.mapLoad(this);
   }
 
-  create() {
+  async create() {
     this.RaycasterDomain = [];
 
-    this.mapCreate(this);
+    await this.mapCreate(this);
 
     if (this.mouse) {
       this.matter.add.mouseSpring({ stiffness: 0.001 }).constraint;
@@ -179,11 +186,36 @@ class Over extends Phaser.Scene {
     this.camera = data[1];
   }
 
-  preload() {
-    this.load.image("echelle", "assets/scale.png");
+  async preload() {
+    await this.load.image("echelle", "assets/scale.png");
   }
 
-  create() {
+  zoomOut() {
+    this.camera.zoom /= 1.2;
+    this.echelle.scale /= 1.2;
+  }
+
+  zoomIn() {
+    this.camera.zoom *= 1.2;
+    this.echelle.scale *= 1.2;
+  }
+
+  freeMode() {
+    this.keyboardControl = true;
+    this.cursor.setPosition(15 + this.buttons[0].width, 110);
+    this.camera.stopFollow();
+  }
+
+  followMode(robotIndex) {
+    this.keyboardControl = false;
+    this.cursor.setPosition(
+      15 + this.buttons[robotIndex + 1].width,
+      140 + 30 * robotIndex
+    );
+    this.camera.startFollow(this.robots[robotIndex].body);
+  }
+
+  async create() {
     this.buttons = [];
     this.echelle = this.add
       .image(70, this.height - 30, "echelle")
@@ -198,9 +230,7 @@ class Over extends Phaser.Scene {
         fontSize: 40,
       })
       .setInteractive()
-      .on("pointerdown", () => {
-        (this.camera.zoom /= 1.2), (this.echelle.scale /= 1.2);
-      });
+      .on("pointerdown", () => this.zoomOut());
 
     this.add
       .text(10, 10, "+", {
@@ -210,9 +240,7 @@ class Over extends Phaser.Scene {
         fontSize: 40,
       })
       .setInteractive()
-      .on("pointerdown", () => {
-        (this.camera.zoom *= 1.2), (this.echelle.scale *= 1.2);
-      });
+      .on("pointerdown", () => this.zoomIn());
 
     this.buttons.push(
       this.add
@@ -222,11 +250,7 @@ class Over extends Phaser.Scene {
           padding: 3,
         })
         .setInteractive()
-        .on("pointerdown", () => {
-          this.keyboardControl = true;
-          this.cursor.setPosition(15 + this.buttons[0].width, 110);
-          this.camera.stopFollow();
-        })
+        .on("pointerdown", () => this.freeMode())
     );
 
     for (let i = 0; i < this.robots.length; i++) {
@@ -238,14 +262,7 @@ class Over extends Phaser.Scene {
             padding: 3,
           })
           .setInteractive()
-          .on("pointerdown", () => {
-            this.keyboardControl = false;
-            this.cursor.setPosition(
-              15 + this.buttons[i + 1].width,
-              140 + 30 * i
-            );
-            this.camera.startFollow(this.robots[i].body);
-          })
+          .on("pointerdown", () => this.followMode(i))
       );
     }
 

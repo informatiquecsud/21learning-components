@@ -1,4 +1,4 @@
-function mapLoad(scene) {}
+async function mapLoad(scene) {}
 
 function follow_line(scene) {
   let points = 0;
@@ -25,20 +25,21 @@ function follow_line(scene) {
   console.log(`Total points: ${points}`);
 }
 
-function slalom(scene, nb, delta, radius = 30) {
+function slalom(scene, nb, delta, start = 300, radius = 30) {
   for (let i = 0; i < nb; i++) {
-    new wallCircle(scene, 0, -200 - i * delta, radius);
+    new wallCircle(scene, 0, -start - i * delta, radius);
   }
 }
 
-function mapCreate(scene) {
+async function mapCreate(scene) {
   new maqueenLite(scene, "N°1", 0, 0, 0);
-  slalom(scene, 3, 300);
+  slalom(scene, 3, 300, 300, 35);
 }
 
-function sceneCreated(simulation) {
-  const scene = simulation.scenes[0];
-  console.log("scene", simulation.scenes);
+function sceneCreated({ overlayScene, robots }) {
+  overlayScene.freeMode();
+  overlayScene.camera.scrollY -= 600;
+  overlayScene.camera.rotation = Math.PI / 2;
 }
 
 sim = new simulation({

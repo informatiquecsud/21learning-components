@@ -28,7 +28,6 @@ onMounted(() => {});
 watch(
   () => props.stdout,
   (newValue, oldValue) => {
-    console.log("stdout changed");
     stdoutScrollArea.value.setScrollPercentage("vertical", 1.0);
   }
 );
