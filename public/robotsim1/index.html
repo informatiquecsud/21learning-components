@@ -29,7 +29,11 @@
 
   <script>
     const url = new URL(window.location.href);
-    const worldToLoad = url.searchParams.get("world") || "emptyWorld";
+    let worldToLoad = url.searchParams.get("world");
+    console.log("world", worldToLoad);
+    if (worldToLoad === null || worldToLoad === undefined) {
+      worldToLoad = "emptyWorld";
+    }
     document.getElementById("worldName").innerText = worldToLoad;
     const worldScript = document.createElement("script");
     worldScript.setAttribute("src", "worlds/" + worldToLoad + ".js");

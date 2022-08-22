@@ -3,9 +3,7 @@
     <template v-slot:before>
       <q-header elevated>
         <q-toolbar>
-          <q-btn color="green" class="q-ma-sm" @click="runCode"
-            >Save & Run</q-btn
-          >
+          <q-btn color="green" class="q-ma-sm" @click="runCode">Run</q-btn>
           <q-btn
             color="white"
             text-color="black"
@@ -361,7 +359,7 @@ const shareAsURL = () => {
 
 const robotsimQueryParams = computed(() => {
   const queryParams = {
-    world: route.query.world,
+    world: route.query.world || "emptyWorld",
   };
 
   return Object.entries(queryParams)
@@ -394,7 +392,11 @@ const loadModules = async (prefix, files) => {
   });
 };
 
-const onEditorChange = () => {};
+const onEditorChange = (code) => {
+  // bad practice to make the code available from outside if editor embedded in
+  // iframe
+  window.mainCode = code;
+};
 
 const getActiveFile = (path) =>
   editorFiles.value.find((file) => file.path === activeFile.value);
@@ -411,8 +413,8 @@ onMounted(async () => {
   const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
   const localUrl = `/mbrobot/`;
   await loadModules(localUrl, [
-    { path: "mbrobot.py", show: false },
-    { path: "mbrobot2.py", show: true },
+    { path: "mbrobot.py", show: true },
+    { path: "mbrobot2.py", show: false },
     { path: "delay.py", show: false },
     { path: "microbit.py", show: false },
     { path: "mbrobotmot.py", show: false },

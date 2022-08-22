@@ -22,9 +22,8 @@ irLeft = pin13
 irRight = pin14
 ledLeft = pin8
 ledRight = pin12
-LEFT = 0
-RIGHT = 2
-ALL = 4
+M_LEFT = 0
+M_RIGHT = 2
 
 # motor direction
 D_FW = 0 if mode == REAL else 1
@@ -34,8 +33,8 @@ def rotMot(side, d, s):
     i2c.write(0x10, bytearray([side, d, s]))
 
 def w(d1, d2, s1, s2):
-    rotMot(LEFT, d1, s1)
-    rotMot(RIGHT, d2, s2)
+    rotMot(M_LEFT, d1, s1)
+    rotMot(M_RIGHT, d2, s2)
 
 def setSpeed(speed):
     global _v
@@ -93,9 +92,7 @@ def dist_sim():
 
 getDistance = dist_real if mode == REAL else dist_sim
 
-def setLED(on, what=ALL):
-    if what in [LEFT, ALL]:
-        pin8.write_digital(on)
-    if what in [RIGHT, ALL]:
-        pin12.write_digital(on)
+def setLED(on):
+    pin8.write_digital(on)
+    pin12.write_digital(on)
 

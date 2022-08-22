@@ -1,10 +1,62 @@
-import gc
-gc.collect()
-# mbrobotmot.py
-# Version 1.2, Aug 9, 2019
+from os import uname
 
-import gc
-from microbit import *
+REAL = 0
+SIM = 1
+mode = REAL if uname().nodename == 'microbit' else SIM
+
+if mode == REAL:
+    import gc
+    gc.collect()
+    from microbit import i2c, pin1, pin2, pin8, pin12, pin13, pin14, sleep
+    import machine
+    delay = sleep
+    _v = 50
+    pin2.set_pull(pin2.NO_PULL)
+else:
+    from microbit import *
+    from delay import delay
+    _v = 60
+
+_axe = 0.097
+irLeft = pin13
+irRight = pin14
+ledLeft = pin8
+ledRight = pin12
+M_LEFT = 0
+M_RIGHT = 2
+
+# motor direction
+D_FW = 0 if mode == REAL else 1
+D_BW = 1 if mode == REAL else 2
+
+def rotMot(side, d, s):
+    i2c.write(0x10, bytearray([side, d, s]))
+
+def stop():
+    w(0, 0, 0, 0)
+
+def rotateMotor(side, s):
+    v = abs(s)
+    d = D_BW if s < 0 else D_FW
+    rotMot(side, d, v)
+
+def dist_real():
+    pin1.write_digital(1)
+    pin1.write_digital(0)
+    p = machine.time_pulse_us(pin2, 1, 50000)
+    cm = int(p / 58.2 + 0.5)
+    return cm if cm > 0 else 255
+
+def dist_sim():
+    return sim.robots[0].getDistance()
+
+getDistance = dist_real if mode == REAL else dist_sim
+
+def setLED(on):
+    pin8.write_digital(on)
+    pin12.write_digital(on)
+
+
 
 class Motor:
     def __init__(self, id):
@@ -13,12 +65,12 @@ class Motor:
     def rotate(self, s):
         v = abs(s)
         if s > 0:
-            self._w(0, v)    
+            self._w(D_FW, v)
         elif s < 0:
-            self._w(1, v) 
-        else:   
-            self._w(0, 0)    
-        
+            self._w(D_BW, v)
+        else:
+            self._w(D_FW, 0)
+
 
     def _w(self, d, s):
         try:
@@ -28,21 +80,7 @@ class Motor:
             while True:
                 pass
 
-delay = sleep
 
-def getDistance():
-    return sim.robots[0].getDistance()
-
-def setLED(on):
-    pin8.write_digital(on)
-    pin12.write_digital(on)
-
-pin2.set_pull(pin2.NO_PULL)
-irLeft = pin13
-irRight = pin14
-ledLeft = pin8
-ledRight = pin12
 motL = Motor(0)
 motR = Motor(1)
-
 
