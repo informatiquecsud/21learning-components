@@ -31,6 +31,7 @@ D_FW = 0 if mode == REAL else 1
 D_BW = 1 if mode == REAL else 2
 
 def rotMot(side, d, s):
+    d = 0 if s == 0 else d
     i2c.write(0x10, bytearray([side, d, s]))
 
 def w(d1, d2, s1, s2):
@@ -76,7 +77,7 @@ def rightArc(r):
 def leftArc(r):
     arc(r, 'L')
 
-def rotateMotor(side, s):
+def rotateMotor(s, side):
     v = abs(s)
     d = D_BW if s < 0 else D_FW
     rotMot(side, d, v)
