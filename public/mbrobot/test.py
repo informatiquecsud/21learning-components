@@ -1,4 +1,4 @@
-from mbrobot2 import *
+from mbrobot import *
 
 cmds = [
     [forward],
@@ -9,11 +9,11 @@ cmds = [
     [rightArc, 0.2],
     [leftArc, 0.2],
     [stop],
-    [rotateMotor, M_LEFT, 60],
-    [rotateMotor, M_LEFT, -60],
+    [rotateMotor, 60, LEFT],
+    [rotateMotor, -60, LEFT],
     [stop],
-    [rotateMotor, M_RIGHT, 60],
-    [rotateMotor, M_RIGHT, -60],
+    [rotateMotor, 60, RIGHT],
+    [rotateMotor, -60, RIGHT],
     [stop],
 ]
 
@@ -26,5 +26,6 @@ for cmd in cmds:
     delay(1000)
     stop()
     delay(500)
+
 
 
