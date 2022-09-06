@@ -5,6 +5,7 @@
         <q-toolbar>
           <q-btn color="green" class="q-ma-sm" @click="runCode">Run</q-btn>
           <q-btn
+            v-if="false"
             color="white"
             text-color="black"
             class="q-ma-sm"
@@ -12,6 +13,7 @@
             >Reload</q-btn
           >
           <q-btn
+            v-if="false"
             color="white"
             text-color="black"
             class="q-ma-sm"
