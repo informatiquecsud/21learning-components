@@ -111,7 +111,13 @@
               </q-tab-panel>
 
               <q-tab-panel name="stderr">
-                <pre>{{ stderr }}</pre>
+                <pre class="stderr-msg">{{ stderr }}</pre>
+                <q-btn
+                  v-if="stderr"
+                  color="primary"
+                  @click="tab = 'asyncifiedCode'"
+                  >Mettre en évidence dans le code</q-btn
+                >
               </q-tab-panel>
               <q-tab-panel name="repl"> REPL </q-tab-panel>
               <q-tab-panel name="asyncifiedCode">
@@ -133,7 +139,7 @@
 
 <script setup>
 import { defineProps, ref, reactive, onMounted, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { routerKey, useRoute, useRouter } from "vue-router";
 import { loadScript } from "vue-plugin-load-script";
 import { useQuasar } from "quasar";
 import Codemirror from "codemirror-editor-vue3";
@@ -242,7 +248,13 @@ const initializePyodide = async () => {
         indexURL: languagePluginUrl,
         stdin: window.prompt,
         stdout: writeToStdout,
-        stderr: (text) => (stderr.value += text + "\n"),
+        stderr: (text) => {
+          const lines = text.split("\n");
+          const relevantMsg = lines[lines.length - 1];
+          console.log(lines);
+          console.log(relevantMsg);
+          stderr.value = relevantMsg + "\n";
+        },
       });
       window.pyodide = pyodide;
       console.log("pyodide loading ...", pyodide);
@@ -264,8 +276,21 @@ const writeToStdout = (text) => {
 };
 
 const writeToStderr = (text) => {
-  stderr.value += text + "\n";
+  const lines = text.split("\n");
+  const relevantMsg = lines[lines.length - 2];
+  let errLineNoAsync = undefined;
+  try {
+    const whereLine = lines[lines.length - 3];
+    const match = whereLine.match(/line (\d+)/);
+    errLineNoAsync = match[1];
+  } catch (e) {
+    console.log(`Error: ${e}`);
+    errLineNoAsync = null;
+  }
+
+  stderr.value = `Line ${errLineNoAsync} of async code: ${relevantMsg + "\n"}`;
   console.log("stderr", stderr.value);
+  console.log("lines", lines);
 };
 
 const runTestCommand = () => {
@@ -430,8 +455,14 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .CodeMirror {
   font-size: 1.5em;
+}
+
+.stderr-msg {
+  color: red;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 </style>

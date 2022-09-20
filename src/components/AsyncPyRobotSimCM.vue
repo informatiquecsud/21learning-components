@@ -167,8 +167,15 @@ const writeToStdout = (data) => {
 };
 
 const writeToStderr = (data) => {
-  console.log(data);
-  stderr.value += data + "\n";
+  console.log("error data:", data);
+
+  // extract last line with error message
+  const lines = data.split("\n");
+  console.log("lines: " + lines);
+  const relevant_msg = lines[lines.length - 1];
+  console.log("msg: " + relevant_msg);
+
+  stderr.value = relevant_msg + "\n";
   console.log("stderr", stderr.value);
 };
 
