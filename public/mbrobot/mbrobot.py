@@ -32,7 +32,10 @@ D_BW = 1 if mode == REAL else 2
 
 def rotMot(side, d, s):
     d = 0 if s == 0 else d
-    i2c.write(0x10, bytearray([side, d, s]))
+    try:
+        i2c.write(0x10, bytearray([side, d, s]))
+    except:
+        print("Unsufficient power to control the motors")
 
 def w(d1, d2, s1, s2):
     rotMot(LEFT, d1, s1)
@@ -100,3 +103,9 @@ def setLED(on, what=ALL):
     if what in [RIGHT, ALL]:
         pin12.write_digital(on)
 
+'''
+def set_alarm_real(state):
+    pass
+
+setAlarm = iframe.contentWindow.setAlarm if mode == SIM else set_alarm_real
+'''
