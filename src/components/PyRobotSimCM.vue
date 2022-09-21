@@ -378,7 +378,12 @@ const loadLastCode = () => {
 };
 
 const shareAsURL = () => {
-  const queryParams = { ...route.query, main: btoa(editorFiles.value[0].data) };
+  const queryParams = {
+    ...route.query,
+    main: btoa(editorFiles.value[0].data),
+    vsplit: parseInt(vSplitterLocation.value),
+    hsplit: parseInt(hSplitterLocation.value),
+  };
   router.replace({ query: queryParams });
 };
 
