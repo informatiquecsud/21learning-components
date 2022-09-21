@@ -465,4 +465,8 @@ onMounted(async () => {
   font-weight: bold;
   font-size: 1.2em;
 }
+
+.CodeMirror-code {
+  font-size: 1.4em;
+}
 </style>

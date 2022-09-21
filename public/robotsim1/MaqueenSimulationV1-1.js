@@ -459,13 +459,18 @@ class pin {
 class ultrasonicD {
   constructor(scene, reference, x, y, angle = 0, range = 255, coneAngle = 60) {
     this.reference = reference;
+    this.coneAngle = coneAngle;
     this.scene = scene;
     this.range = range;
     this.angle = (angle / 180) * Math.PI;
     this.deltaOrigin = Math.sqrt(x ** 2 + y ** 2);
     this.rotationOrigin = Math.atan2(y, x);
+    this.x = x;
+    this.y = y;
 
-    this.raycaster = scene.raycasterPlugin.createRaycaster();
+    this.raycaster = scene.raycasterPlugin.createRaycaster({
+      debug: true,
+    });
     this.raycaster.mapGameObjects(scene.RaycasterDomain);
     this.rayCone = this.raycaster
       .createRay({
@@ -481,13 +486,14 @@ class ultrasonicD {
 
     this.rayCone.enablePhysics("matter");
 
-    this.raycaster.mapGameObjects(scene.RaycasterDomain);
+    // this.raycaster.mapGameObjects(scene.RaycasterDomain, true);
   }
 
   getDistance() {
     let distances = [];
     let distance;
-    this.raycaster.mapGameObjects(this.scene.RaycasterDomain);
+    // Map the objects in dynamic mode to work for moving objects
+    this.raycaster.mapGameObjects(this.scene.RaycasterDomain, true);
     this.intersections = this.rayCone.castCone();
     for (let i = 0; i < this.intersections.length; i++) {
       distance = Math.sqrt(
@@ -1215,6 +1221,7 @@ class Picture {
 
 class wallRect {
   constructor(scene, x, y, width, height, angle = 0) {
+    this.scene = scene;
     this.position = { x: x, y: y };
     this.scale = { x: 1, y: 1 };
     this.angle = angle;
