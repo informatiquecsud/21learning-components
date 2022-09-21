@@ -385,6 +385,8 @@ const shareAsURL = () => {
     hsplit: parseInt(hSplitterLocation.value),
   };
   router.replace({ query: queryParams });
+  const url = window.location.href;
+  navigator.clipboard.writeText(url);
 };
 
 const robotsimQueryParams = computed(() => {
