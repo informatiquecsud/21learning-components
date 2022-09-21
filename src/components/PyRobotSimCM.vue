@@ -251,8 +251,6 @@ const initializePyodide = async () => {
         stderr: (text) => {
           const lines = text.split("\n");
           const relevantMsg = lines[lines.length - 1];
-          console.log(lines);
-          console.log(relevantMsg);
           stderr.value = relevantMsg + "\n";
         },
       });
@@ -435,6 +433,14 @@ onMounted(async () => {
 
   if (route.query.main !== undefined) {
     editorFiles.value[0].data = atob(route.query.main);
+  }
+
+  if (route.query.vsplit !== undefined) {
+    vSplitterLocation.value = Number(route.query.vsplit);
+  }
+
+  if (route.query.hsplit !== undefined) {
+    hSplitterLocation.value = Number(route.query.hsplit);
   }
 
   const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
