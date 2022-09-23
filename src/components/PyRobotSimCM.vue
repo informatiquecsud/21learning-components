@@ -83,7 +83,7 @@
           <i-frame-robot-sim
             :src="`robotsim1/index.html?${robotsimQueryParams}`"
             :width="700"
-            :height="hSplitterLocation"
+            :height="robotsimIFrameHeight"
           ></i-frame-robot-sim>
         </template>
 
@@ -388,6 +388,10 @@ const shareAsURL = () => {
   const url = window.location.href;
   navigator.clipboard.writeText(url);
 };
+
+const robotsimIFrameHeight = computed(() => {
+  return hSplitterLocation.value || 600;
+});
 
 const robotsimQueryParams = computed(() => {
   const queryParams = {
