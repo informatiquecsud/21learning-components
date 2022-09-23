@@ -7,7 +7,11 @@ function mapLoad(scene) {
 }
 
 function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
+  // set robot at random position and orientation
+  const x = getRandomInt(-400, 400);
+  const y = getRandomInt(-300, 300);
+  const alpha = getRandomInt(-200, 200);
+  robot = new maqueenLite(scene, "N°1", x, y, alpha);
 
   const prisonWidth = 1200;
   const prisonHeight = 800;
@@ -62,8 +66,8 @@ function sceneCreated({ overlayScene, robots }) {
   overlayScene.zoomOut();
 
   //overlayScene.camera.scrollX += 200;
-  robots[0].setPosition(0, 0);
-  robots[0].setAngle(90);
+  // robots[0].setPosition(0, 0);
+  // robots[0].setAngle(90);
 }
 
 // simulation(width, height, id, mapLoad, mapCreate, zoom, mouse);
