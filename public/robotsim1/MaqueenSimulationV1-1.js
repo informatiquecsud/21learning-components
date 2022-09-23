@@ -448,7 +448,7 @@ class pin {
   }
 
   read_digital() {
-    return this.component[this.read]();
+    return Number(this.component[this.read]());
   }
 
   write_digital(set) {
