@@ -856,7 +856,7 @@ class maqueenLite {
     );
 
     //mise en place du capteur ultrason
-    this.ultrasonic = new ultrasonicD(scene, this.body, 0, -35);
+    this.ultrasonic = new ultrasonicD(scene, this.body, 0, -35, 0, 400, 30);
 
     //mise en place des capteurs infrarouges
     this.irL = new infra(scene, this.body, -7, -16, 2, false);
