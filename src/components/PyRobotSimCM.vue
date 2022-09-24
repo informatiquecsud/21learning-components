@@ -459,6 +459,7 @@ onMounted(async () => {
   const localUrl = `/mbrobot/`;
   await loadModules(localUrl, [
     { path: "mbrobot.py", show: true },
+    { path: "robotsim.py", show: false },
     { path: "mbrobot2.py", show: false },
     { path: "delay.py", show: false },
     { path: "microbit.py", show: false },
