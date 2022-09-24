@@ -29,6 +29,7 @@
   <script src="worlds.js"></script>
 
   <script>
+    console.log("location", window.location.href);
     const url = new URL(window.location.href);
     let worldToLoad = url.searchParams.get("world");
     console.log("world", worldToLoad);
@@ -39,6 +40,55 @@
     const worldScript = document.createElement("script");
     worldScript.setAttribute("src", "worlds/" + worldToLoad + ".js");
     document.body.appendChild(worldScript);
+
+    // apply query params configuration
+    const applyQueryParamsConfig = (params) => {
+      console.log("simulation", sim);
+      const { robots, scenes } = sim;
+      const overlayScene = scenes[1];
+      const robot = robots[0];
+      console.log("query params", params.toString());
+      console.log("query params", params.entries());
+
+      // configure robot position and orientation
+      const x = parseInt(params.get("x"));
+      const y = parseInt(params.get("y"));
+      const angle = parseInt(params.get("angle"));
+
+      robot.setPosition(x || 0, y || 0);
+      robot.setAngle(angle || 0);
+
+      // configure the camera
+      setTimeout(() => {
+        // configure the camera mode
+        const camera = params.get("camera");
+        if (camera === "free") {
+          overlayScene.freeMode();
+        } else if (camera === "follow") {
+          overlayScene.followMode(0);
+        }
+
+        // configure the zoom factor
+        const zoomFactor = parseInt(params.get("zoom")) || 0;
+        for (let i = 0; i < Math.abs(zoomFactor); i++) {
+          if (zoomFactor > 0) {
+            overlayScene.zoomIn();
+          } else {
+            overlayScene.zoomOut();
+          }
+        }
+      }, 1000);
+    };
+
+    // wait for the simulation to be loaded using polling
+    const interval = setInterval(() => {
+      try {
+        if (sim !== undefined && sim.robots[0] !== undefined) {
+          clearInterval(interval);
+          applyQueryParamsConfig(url.searchParams);
+        }
+      } catch {}
+    }, 30);
   </script>
   <!-- <script src="worlds/01_followline/index.js"></script> -->
   <!-- <script src="demo2.js"></script> -->

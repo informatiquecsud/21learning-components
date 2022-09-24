@@ -395,6 +395,7 @@ const robotsimIFrameHeight = computed(() => {
 
 const robotsimQueryParams = computed(() => {
   const queryParams = {
+    ...route.query,
     world: route.query.world || "emptyWorld",
   };
 

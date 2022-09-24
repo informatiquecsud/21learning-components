@@ -4,6 +4,7 @@
 
 function mapLoad(scene) {
   scene.load.image("bg", "worlds/bg/bg-shape-1.png");
+  //scene.load.image("bg", "worlds/bg/blackarea.gif");
 }
 
 function mapCreate(scene) {

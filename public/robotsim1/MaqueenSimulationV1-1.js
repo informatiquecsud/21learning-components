@@ -208,6 +208,7 @@ class Over extends Phaser.Scene {
 
   followMode(robotIndex) {
     this.keyboardControl = false;
+
     this.cursor.setPosition(
       15 + this.buttons[robotIndex + 1].width,
       140 + 30 * robotIndex
