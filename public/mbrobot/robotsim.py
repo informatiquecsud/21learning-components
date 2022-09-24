@@ -24,10 +24,29 @@ Usage 2 (with robot as argument without makeSim)
 
 """
 
+from js import window, document
+from pyodide import to_js
+import os
 
-from os import uname
 from collections import namedtuple
-import re
+
+_platform = None
+if os.uname().sysname == "Emscripten":
+    _platform = "pyodide"
+elif os.uname().sysname == "microbit":
+    _platform = "microbit"
+
+if _platform == "pyodide":
+    iframe = document.querySelector("iframe.robotsim-container")
+    sim_globals = iframe.contentWindow
+    sim = sim_globals.sim
+    game = sim.game
+    scene = game.scene.scenes[0]
+    robot = sim.robots[0]
+    body = robot.body
+
+    overlay = game.scene.scenes[1]
+    camera = overlay.camera
 
 Location = namedtuple("Location", "x y angle")
 
@@ -37,51 +56,44 @@ class NoRobotFoundError(RuntimeError):
         super().__init__("Call makeSim(robot) or pass robot instance as argument")
 
 
-_robot = None
-
-
-def makeSim(robot):
-    global _robot, _body
-    _robot = robot
-    _body = robot.body
-
-
 def _to_display(n):
     return round(n, 1)
 
 
 def getLocation(robot=None):
     return Location(
-        x=_to_display(_body.x), y=_to_display(_body.y), angle=_to_display(_body.angle)
+        x=_to_display(body.x), y=_to_display(body.y), angle=_to_display(body.angle)
     )
+
+
+def setLocation(*args, **kwargs):
+    if len(args) == 2:
+        x, y = args
+        angle = 0
+    elif len(args) == 3:
+        x, y, angle = args
+    elif len(args) == 1:
+        x = args[0]
+        y, angle = 0, 0
+    elif len(args) == 0:
+        x = kwargs.get("x", 0)
+        y = kwargs.get("y", 0)
+        angle = kwargs.get("angle", 0)
+
+    robot.setPosition(x, y)
+    robot.setAngle(angle)
 
 
 getLoc = getLocation
 
 
-def getRobot(robot):
-    try:
-        global _robot
-        return robot or _robot
-    except:
-        raise NoRobotFoundError
-
-
-def getBody(robot):
-    try:
-        global _robot
-        return robot and robot.body or _robot.body
-    except:
-        raise NoRobotFoundError
-
-
 def getX(robot=None):
-    return _to_display(getBody(robot).x)
+    return _to_display(body.x)
 
 
 def getY(robot=None):
-    return _to_display(getBody(robot).y)
+    return _to_display(body.y)
 
 
 def getAngle(robot=None):
-    return _to_display(getBody(robot).angle)
+    return _to_display(body.angle)
