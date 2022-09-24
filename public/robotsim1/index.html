@@ -77,6 +77,12 @@
             overlayScene.zoomOut();
           }
         }
+
+        // scroll de la vue
+        const scrollX = Number(params.get("scrollX"));
+        const scrollY = Number(params.get("scrollY"));
+        overlayScene.camera.scrollX = scrollX;
+        overlayScene.camera.scrollY = scrollY;
       }, 1000);
     };
 
