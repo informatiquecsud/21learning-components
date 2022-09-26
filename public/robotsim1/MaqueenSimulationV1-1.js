@@ -74,7 +74,6 @@ class simulation {
     return new wallRect(this.scenes[0], x, y, width, height, angle);
   }
   wallPoly(x, y, points) {
-    console.log("x y points", x, y, points);
     return new wallPoly(this.scenes[0], x, y, points);
   }
 
