@@ -41,7 +41,7 @@ function sceneCreated({ overlayScene, robots }) {
 // simulation(width, height, id, mapLoad, mapCreate, zoom, mouse);
 sim = new simulation({
   width: 700,
-  height: 500,
+  height: 300,
   id: "simulation",
   mapLoad,
   mapCreate,
