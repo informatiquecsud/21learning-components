@@ -9,12 +9,18 @@ function mapLoad(scene) {
 function mapCreate(scene) {
   new maqueenLite(scene, "N°1", 0, 0, 0);
 
-  const x = getRandomInt(300, 800) * (1 - 2 * getRandomInt(0, 1));
-  const y = getRandomInt(200, 450) * (1 - 2 * getRandomInt(0, 1));
+  const r = getRandomInt(300, 630);
+  const phi = Math.random() * 2 * Math.PI;
+
+  const x = Math.cos(phi) * r;
+  const y = Math.sin(phi) * r;
+
+  // const x = getRandomInt(300, 650) * (1 - 2 * getRandomInt(0, 1));
+  // const y = getRandomInt(200, 450) * (1 - 2 * getRandomInt(0, 1));
 
   console.log("coordinates", x, y);
 
-  new Picture(scene, "circle", 0, 0, 0, 10, 10);
+  new Picture(scene, "circle", 0, 0, 0, 8, 8);
 
   const target = new wallCircle(scene, x, y, 40);
   target.body.setStatic(false);
