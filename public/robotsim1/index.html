@@ -80,11 +80,19 @@
           }
         }
 
+        console.log("scroll camera", overlayScene.camera.scrollX);
+
         // scroll de la vue
-        const scrollX = Number(params.get("scrollX"));
-        const scrollY = Number(params.get("scrollY"));
-        overlayScene.camera.scrollX = scrollX;
-        overlayScene.camera.scrollY = scrollY;
+        const scrollX = parseInt(Number(params.get("scrollX")));
+        const scrollY = parseInt(Number(params.get("scrollY")));
+
+        if (scrollY) {
+          overlayScene.camera.scrollY = scrollY;
+        }
+
+        if (scrollX) {
+          overlayScene.camera.scrollX = scrollX;
+        }
       }, 1000);
     };
 
