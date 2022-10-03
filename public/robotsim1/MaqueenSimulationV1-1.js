@@ -132,6 +132,7 @@ class Simul extends Phaser.Scene {
     this.marks = marks;
     this.zones = zones;
     this.mouse = mouse;
+    this.params = new URL(window.location.href).searchParams;
   }
 
   async preload() {
@@ -153,7 +154,7 @@ class Simul extends Phaser.Scene {
   async create() {
     this.RaycasterDomain = [];
 
-    await this.mapCreate(this);
+    await this.mapCreate(this, this.params);
 
     if (this.mouse) {
       this.matter.add.mouseSpring({ stiffness: 0.001 }).constraint;
