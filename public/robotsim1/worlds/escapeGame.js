@@ -6,16 +6,20 @@ function mapLoad(scene) {
   // scene.load.image("circle", "worlds/bg/circle-50cm.png");
 }
 
-function mapCreate(scene) {
+function mapCreate(scene, params) {
+  const prisonWidth = parseInt(params.get("prisonWidth")) || 1200;
+  const prisonHeight = parseInt(params.get("prisonHeight")) || 800;
+  const holeWidth =
+    parseInt(params.get("holeWidth")) || Math.max(prisonWidth / 4, 200);
+
   // set robot at random position and orientation
-  const x = getRandomInt(-400, 400);
-  const y = getRandomInt(-300, 300);
+  const rangeX = parseInt((prisonWidth - prisonWidth / 6 - holeWidth / 2) / 2);
+  const rangeY = parseInt((prisonHeight - prisonWidth / 6) / 2);
+
+  const x = getRandomInt(-rangeX, rangeX);
+  const y = getRandomInt(-rangeY, rangeY);
   const alpha = getRandomInt(-200, 200);
   robot = new maqueenLite(scene, "N°1", x, y, alpha);
-
-  const prisonWidth = 1200;
-  const prisonHeight = 800;
-  const holeWidth = 300;
 
   const wallN = new wallRect(
     scene,
@@ -25,6 +29,7 @@ function mapCreate(scene) {
     prisonWidth,
     90
   ).body.setStatic(true);
+
   const wallW = new wallRect(
     scene,
     -prisonWidth / 2,
@@ -32,11 +37,16 @@ function mapCreate(scene) {
     30,
     prisonHeight
   ).body.setStatic(true);
-  const wallE = new wallRect(scene, prisonWidth / 2, 0, 30, 800).body.setStatic(
-    true
-  );
 
-  const wallS1Width = getRandomInt(50, 700);
+  const wallE = new wallRect(
+    scene,
+    prisonWidth / 2,
+    0,
+    30,
+    prisonHeight
+  ).body.setStatic(true);
+
+  const wallS1Width = getRandomInt(50, prisonWidth / 2);
   const wallS1X = -prisonWidth / 2 + wallS1Width / 2;
   const wallS1 = new wallRect(
     scene,
