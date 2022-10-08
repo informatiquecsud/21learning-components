@@ -273,6 +273,14 @@ const writeToStdout = (text) => {
   console.log("stdout", stdout.value);
 };
 
+const writeToStderr = (error) => {
+  const lastFileIndex = error.message.lastIndexOf('File "');
+  const studentMessage = error.message.slice(lastFileIndex);
+
+  stderr.value = studentMessage;
+};
+
+/*
 const writeToStderr = (text) => {
   const lines = text.split("\n");
   const relevantMsg = lines[lines.length - 2];
@@ -290,6 +298,7 @@ const writeToStderr = (text) => {
   console.log("stderr", stderr.value);
   console.log("lines", lines);
 };
+*/
 
 const runTestCommand = () => {
   console.log(pyodide.runPython(`import sys\nprint(sys.version)`));
@@ -343,16 +352,12 @@ const runCode = async () => {
   try {
     codeToRun = await asyncifyPyCode(code, pyodide);
     asyncCode.value = codeToRun;
+
+    const res = await pyodide.runPythonAsync(codeToRun);
     //console.log("res", codeToRun);
   } catch (error) {
-    writeToStderr(`Error while converting code to async code: \n${error}`);
-    tab.value = "stderr";
-  }
-
-  try {
-    const res = await pyodide.runPythonAsync(codeToRun);
-  } catch (error) {
-    writeToStderr(`Error while running code on virtual robot.\n${error}`);
+    console.log("error", error);
+    writeToStderr(error);
     tab.value = "stderr";
   }
 
