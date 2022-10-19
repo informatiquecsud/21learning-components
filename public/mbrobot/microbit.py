@@ -1,6 +1,6 @@
-'''
+"""
 https://github.com/informatiquecsud/mbrobot/blob/main/maqueen-lite/pyodide-robotsim/microbit.py
-'''
+"""
 
 from js import window, document
 from pyodide import to_js
@@ -8,10 +8,10 @@ import os
 
 # Detect platform
 _platform = None
-if os.uname().sysname == 'Emscripten':
-    _platform = 'pyodide'
-elif os.uname().sysname == 'microbit':
-    _platform = 'microbit'
+if os.uname().sysname == "Emscripten":
+    _platform = "pyodide"
+elif os.uname().sysname == "microbit":
+    _platform = "microbit"
 
 
 class Pin:
@@ -24,7 +24,6 @@ pin20 = Pin(20)
 
 
 class I2C:
-
     def __init__(self):
         pass
 
@@ -44,12 +43,14 @@ class I2C:
         return self._i2c_device.write(addr, to_js(buf))
 
 
-if _platform == 'pyodide':
-    iframe = document.querySelector('iframe.robotsim-container')
+if _platform == "pyodide":
+    iframe = document.querySelector("iframe.robotsim-container")
     sim_globals = iframe.contentWindow
     sim = sim_globals.sim
     game = sim.game
     scene = game.scene.scenes[0]
+    overlayScene = game.scene.scenes[1]
+    camera = overlayScene.camera
     robot = sim.robots[0]
     bot_i2c = robot.i2c
     i2c = I2C()
@@ -59,4 +60,3 @@ if _platform == 'pyodide':
     pin14 = sim.robots[0].pin14
     pin8 = sim.robots[0].pin8
     pin12 = sim.robots[0].pin12
-
