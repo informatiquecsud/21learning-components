@@ -50,8 +50,8 @@
           <q-btn
             class="q-ma-sm"
             color="white"
-            icon="add"
-            label="New ..."
+            icon="add_circle_outline"
+            label=""
             text-color="black"
             @click="createFile"
           />
@@ -116,10 +116,10 @@
                   v-if="stderr"
                   color="primary"
                   @click="tab = 'asyncifiedCode'"
-                  >Mettre en évidence dans le code</q-btn
+                  >Highlight in the async code (WIP)</q-btn
                 >
               </q-tab-panel>
-              <q-tab-panel name="repl"> REPL </q-tab-panel>
+              <q-tab-panel name="repl">Not implemented yet ...</q-tab-panel>
               <q-tab-panel name="asyncifiedCode">
                 <Codemirror
                   v-model:value="asyncCode"
@@ -460,10 +460,11 @@ onMounted(async () => {
     hSplitterLocation.value = Number(route.query.hsplit);
   }
 
-  const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
-  const localUrl = `/mbrobot/`;
-  await loadModules(localUrl, [
-    { path: "mbrobot.py", show: true },
+  const editorFilesString = route.query.files || "";
+  const editorFilesToShow = editorFilesString.split(",");
+
+  const files = [
+    { path: "mbrobot.py", show: false },
     { path: "robotsim.py", show: false },
     { path: "mbrobot2.py", show: false },
     { path: "delay.py", show: false },
@@ -475,7 +476,17 @@ onMounted(async () => {
 
     // virtual worlds
     { path: "simple_trail.py", show: false },
-  ]);
+  ];
+
+  files.forEach((file) => {
+    if (editorFilesToShow.indexOf(file.path) !== -1) {
+      file.show = true;
+    }
+  });
+
+  const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
+  const localUrl = `/mbrobot/`;
+  await loadModules(localUrl, files);
 });
 </script>
 
