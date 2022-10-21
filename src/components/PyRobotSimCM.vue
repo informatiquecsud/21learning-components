@@ -69,7 +69,7 @@
             border
             placeholder="test placeholder"
             :style="{
-              height: '800px',
+              height: 'calc(100vh - 111px)',
             }"
             @change="onEditorChange"
           />
@@ -82,7 +82,7 @@
         <template v-slot:before>
           <i-frame-robot-sim
             :src="`robotsim1/index.html?${robotsimQueryParams}`"
-            :width="700"
+            width="100%"
             :height="robotsimIFrameHeight"
           ></i-frame-robot-sim>
         </template>
@@ -105,8 +105,23 @@
 
             <q-separator />
 
-            <q-tab-panels style="max-height: 200px" v-model="tab" animated>
-              <q-tab-panel name="stdout">
+            <q-tab-panels
+              :style="{
+                minHeight: '100px',
+                height: `calc(100vh - ${hSplitterLocation}px - 97px)`,
+                border: 'solid 0px red',
+              }"
+              v-model="tab"
+              animated
+            >
+              <q-tab-panel
+                name="stdout"
+                :style="{
+                  minHeight: '100px',
+                  height: `calc(100vh - ${hSplitterLocation}px - 97px)`,
+                  border: 'solid 0px red',
+                }"
+              >
                 <PyStdout :stdout="stdout"></PyStdout>
               </q-tab-panel>
 
@@ -395,13 +410,17 @@ const shareAsURL = () => {
 };
 
 const robotsimIFrameHeight = computed(() => {
-  return hSplitterLocation.value || 600;
+  return hSplitterLocation.value - 34 || 600;
 });
 
 const robotsimQueryParams = computed(() => {
+  const simHeight =
+    parseInt(route.query.simHeight) || parseInt(route.query.hsplit) - 67 || 500;
+  console.log("simHeight", simHeight);
   const queryParams = {
     ...route.query,
     world: route.query.world || "emptyWorld",
+    simHeight: simHeight,
   };
 
   return Object.entries(queryParams)

@@ -3,7 +3,7 @@
     ref="stdoutScrollArea"
     dark
     :visible="visible"
-    :style="{ height: `${250}px` }"
+    :style="{ height: `${100}%` }"
   >
     <pre class="q-pb-lg" :style="{ maxWidth: '100%' }">{{
       stdout + "\n\n\n\n"

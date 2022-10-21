@@ -33,6 +33,8 @@ export default defineComponent({
 
 <style>
 .robotsim-container {
-  margin: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  /*border: solid 1px red;*/
 }
 </style>
