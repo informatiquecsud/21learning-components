@@ -140,7 +140,7 @@
                   v-model:value="asyncCode"
                   :options="{ ...cmOptions, readOnly: true }"
                   border
-                  height="180px"
+                  height="calc(100%)"
                   @change="change"
                 />
               </q-tab-panel>

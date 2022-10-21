@@ -5,9 +5,7 @@
     :visible="visible"
     :style="{ height: `${100}%` }"
   >
-    <pre class="q-pb-lg" :style="{ maxWidth: '100%' }">{{
-      stdout + "\n\n\n\n"
-    }}</pre>
+    <pre class="q-pb-lg" :style="{ maxWidth: '100%' }">{{ stdout + "\n" }}</pre>
   </q-scroll-area>
 </template>
 
@@ -28,7 +26,10 @@ onMounted(() => {});
 watch(
   () => props.stdout,
   (newValue, oldValue) => {
-    stdoutScrollArea.value.setScrollPercentage("vertical", 1.0);
+    // trick to make it work even if the whole stdout comes at once
+    setTimeout(() => {
+      stdoutScrollArea.value.setScrollPercentage("vertical", 1.0);
+    }, 50);
   }
 );
 </script>
