@@ -36,16 +36,3 @@ function sceneCreated({ overlayScene, robots }) {
   overlayScene.camera.scrollY -= 200;
   overlayScene.camera.scrollX += 400;
 }
-
-// simulation(width, height, id, mapLoad, mapCreate, zoom, mouse);
-sim = new simulation({
-  width: 700,
-  height: 500,
-  id: "simulation",
-  mapLoad,
-  mapCreate,
-  sceneCreated,
-  zoom: 0.6,
-  mouse: 1,
-});
-// Solution : https://21learning-components.surge.sh/#/component/PyRobotSim?world=simpleTrail&main=ZnJvbSBtYnJvYm90MiBpbXBvcnQgKgoKaWYgbW9kZSA9PSBTSU06CiAgICByb2JvdC5zZXRQb3NpdGlvbigwLCAwKQogICAgcm9ib3Quc2V0QW5nbGUoMCkKICAgIFRJTUVfOTAgPSA2MzAKZWxzZToKICAgIFRJTUVfOTAgPSA1NDUKCmZvcndhcmQoKQpkZWxheSgyMzAwKQoKcmlnaHQoKQpkZWxheShUSU1FXzkwKQoKZm9yd2FyZCgpCmRlbGF5KDI4MDApCgpyaWdodCgpCmRlbGF5KFRJTUVfOTApCgpmb3J3YXJkKCkKZGVsYXkoMTMwMCkKCmxlZnQoKQpkZWxheShUSU1FXzkwKQoKZm9yd2FyZCgpCmRlbGF5KDE1MDApCgpzdG9wKCkK

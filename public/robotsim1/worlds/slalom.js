@@ -40,16 +40,3 @@ function sceneCreated({ overlayScene, robots }) {
   overlayScene.camera.scrollY -= 600;
   overlayScene.camera.rotation = Math.PI / 2;
 }
-
-sim = new simulation({
-  width: 700,
-  height: 500,
-  id: "simulation",
-  mapLoad,
-  mapCreate,
-  sceneCreated,
-  zoom: 0.4,
-  mouse: 1,
-});
-
-// Solution : https://21learning-components.surge.sh/#/component/PyRobotSim?world=slalom&main=ZnJvbSBtYnJvYm90MiBpbXBvcnQgKgoKaWYgbW9kZSA9PSBTSU06CiAgICByb2JvdC5zZXRQb3NpdGlvbigwLCAwKQogICAgcm9ib3Quc2V0QW5nbGUoMCkKCmZvcndhcmQoKQpkZWxheSgxMDAwKQoKbGVmdCgpCmRlbGF5KDU2MCkKc3RvcCgpCgpyaWdodEFyYygwLjI1KQpkZWxheSgzODAwKQpzdG9wKCkKCmxlZnRBcmMoMC4yNSkKZGVsYXkoNDIwMCkKc3RvcCgpCgpyaWdodEFyYygwLjI1KQpkZWxheSg0MjAwKQpzdG9wKCk=

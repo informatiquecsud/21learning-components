@@ -96,7 +96,32 @@
       }, 1000);
     };
 
+    // hacky way of waiting for simulation dependencies ...
+    // TODO: improve code quality
+    const loadSimulationInterval = setInterval(() => {
+      try {
+        if (
+          mapLoad !== undefined &&
+          mapCreate !== undefined &&
+          sceneCreated !== undefined
+        ) {
+          clearInterval(loadSimulationInterval);
+          window.sim = new simulation({
+            width: url.searchParams.get("simWidth") || 700,
+            height: url.searchParams.get("simHeight") || 500,
+            id: "simulation",
+            mapLoad,
+            mapCreate,
+            sceneCreated,
+            zoom: 0.6,
+            mouse: 1,
+          });
+        }
+      } catch {}
+    }, 30);
+
     // wait for the simulation to be loaded using polling
+    // TODO:: improve code quality
     const interval = setInterval(() => {
       try {
         if (sim !== undefined && sim.robots[0] !== undefined) {
@@ -106,7 +131,5 @@
       } catch {}
     }, 30);
   </script>
-  <!-- <script src="worlds/01_followline/index.js"></script> -->
-  <!-- <script src="demo2.js"></script> -->
   <!-- <script src="worlds.js"></script> -->
 </html>

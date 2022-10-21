@@ -36,16 +36,3 @@ function sceneCreated({ overlayScene, robots }) {
   robots[0].setPosition(0, 0);
   robots[0].setAngle(90);
 }
-
-// simulation(width, height, id, mapLoad, mapCreate, zoom, mouse);
-sim = new simulation({
-  width: 700,
-  height: 300,
-  id: "simulation",
-  mapLoad,
-  mapCreate,
-  sceneCreated,
-  zoom: 0.6,
-  mouse: 1,
-  debug: false,
-});
