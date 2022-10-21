@@ -17,7 +17,6 @@ const createStripes = (scene, { width, n, height, gap }) => {
 };
 
 async function mapCreate(scene, queryParams) {
-  //const nbStripes = queryParams.get('nbStripes') || ;
   let level = parseInt(queryParams.get("level")) || 0;
   const customLevelConfig = {};
   // Example: level=3&stripWidth=[20,20]&nbStrips=[5,10]&stripGap=[50,50]&stripHeight=800
@@ -79,4 +78,4 @@ function sceneCreated({ overlayScene, robots }) {
   console.log("robot", robot);
 }
 
-// Solution : https://21learning-components.surge.sh/#/component/PyRobotSim?world=stripes&robotType=LITE&hsplit=400&main=ZnJvbSBtYnJvYm90IGltcG9ydCAqCgppZiBtb2RlID09IFNJTToKICAgIHJvYm90LnNldFBvc2l0aW9uKDAsIDApCiAgICByb2JvdC5zZXRBbmdsZSg5MCkKCnN0YXRlID0gImJsYWNrIgpuYl9zdHJpcHMgPSAwCgpmb3J3YXJkKCkKd2hpbGUgVHJ1ZToKICAgIGRlbGF5KDQpCiAgICAKICAgIHZMID0gaXJMZWZ0LnJlYWRfZGlnaXRhbCgpCiAgICBkID0gZ2V0RGlzdGFuY2UoKQogICAgCiAgICAjIHByaW50KGYiR3JvdW5kIGNvbG9yOiB7dkx9XHQgRGlzdGFuY2U6IHtkfSIpCiAgICAKICAgIGlmIGQgPCA1OgogICAgICAgIHN0b3AoKQogICAgICAgIHByaW50KGYiU3RyaXAgY291bnQ6IHtuYl9zdHJpcHN9IikKICAgICAgICBicmVhawogICAgICAgIAogICAgICAgIAogICAgaWYgc3RhdGUgPT0gIndoaXRlIiBhbmQgdkwgPT0gMDoKICAgICAgICBuYl9zdHJpcHMgKz0gMQogICAgICAgIHByaW50KCJPbmUgbW9yZSBzdHJpcCIpCiAgICAgICAgCiAgICBpZiB2TCA9PSAxOgogICAgICAgIHN0YXRlID0gIndoaXRlIgogICAgZWxzZToKICAgICAgICBzdGF0ZSA9ICJibGFjayIKICAgICAgICAKICAgICAgICAKICAgICAgICA=&vsplit=50&level=2
+// Solution : https://21learning-components.surge.sh/#/component/PyRobotSim?world=strips&robotType=LITE&hsplit=400&main=ZnJvbSBtYnJvYm90IGltcG9ydCAqCgppZiBtb2RlID09IFNJTToKICAgIHJvYm90LnNldFBvc2l0aW9uKDAsIDApCiAgICByb2JvdC5zZXRBbmdsZSg5MCkKCnN0YXRlID0gImJsYWNrIgpuYl9zdHJpcHMgPSAwCgpmb3J3YXJkKCkKd2hpbGUgVHJ1ZToKICAgIGRlbGF5KDQpCiAgICAKICAgIHZMID0gaXJMZWZ0LnJlYWRfZGlnaXRhbCgpCiAgICBkID0gZ2V0RGlzdGFuY2UoKQogICAgCiAgICAjIHByaW50KGYiR3JvdW5kIGNvbG9yOiB7dkx9XHQgRGlzdGFuY2U6IHtkfSIpCiAgICAKICAgIGlmIGQgPCA1OgogICAgICAgIHN0b3AoKQogICAgICAgIHByaW50KGYiU3RyaXAgY291bnQ6IHtuYl9zdHJpcHN9IikKICAgICAgICBicmVhawogICAgICAgIAogICAgICAgIAogICAgaWYgc3RhdGUgPT0gIndoaXRlIiBhbmQgdkwgPT0gMDoKICAgICAgICBuYl9zdHJpcHMgKz0gMQogICAgICAgIHByaW50KCJPbmUgbW9yZSBzdHJpcCIpCiAgICAgICAgCiAgICBpZiB2TCA9PSAxOgogICAgICAgIHN0YXRlID0gIndoaXRlIgogICAgZWxzZToKICAgICAgICBzdGF0ZSA9ICJibGFjayIKICAgICAgICAKICAgICAgICAKICAgICAgICA=&vsplit=50&level=2
