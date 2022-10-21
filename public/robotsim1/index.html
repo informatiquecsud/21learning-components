@@ -106,9 +106,11 @@
           sceneCreated !== undefined
         ) {
           clearInterval(loadSimulationInterval);
+          const height = parseInt(url.searchParams.get("simHeight")) || 500;
+          const width = parseInt(url.searchParams.get("simWidth")) || 700;
           window.sim = new simulation({
-            width: url.searchParams.get("simWidth") || 700,
-            height: url.searchParams.get("simHeight") || 500,
+            width,
+            height,
             id: "simulation",
             mapLoad,
             mapCreate,
