@@ -2,15 +2,14 @@
 
 */
 
-function mapLoad(scene) {
+function mapLoad(scene, queryParams) {
   scene.load.image("bg", "worlds/bg/bg-shape-1.png");
   //scene.load.image("bg", "worlds/bg/blackarea.gif");
 }
 
-function mapCreate(scene) {
+function mapCreate(scene, queryParams) {
   const [x, y, angle] = [0, 0, 0];
 
-  robot = new maqueenLite(scene, "N°1", x, y, angle);
   robot.setPosition(-55, 118);
   robot.setAngle(-30);
 

@@ -7,8 +7,6 @@ function mapLoad(scene) {
 }
 
 function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
-
   const r = getRandomInt(300, 630);
   const phi = Math.random() * 2 * Math.PI;
 

@@ -19,7 +19,6 @@ function mapCreate(scene, params) {
   const x = getRandomInt(-rangeX, rangeX);
   const y = getRandomInt(-rangeY, rangeY);
   const alpha = getRandomInt(-200, 200);
-  robot = new maqueenLite(scene, "N°1", x, y, alpha);
 
   const wallN = new wallRect(
     scene,

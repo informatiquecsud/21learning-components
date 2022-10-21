@@ -2,7 +2,7 @@
 
 */
 
-function mapLoad(scene) {
+function mapLoad(scene, queryParams) {
   const params = new URL(window.location.href).searchParams;
   const bgSrc = params.get("bg");
 
@@ -16,11 +16,9 @@ function mapLoad(scene) {
   scene.load.image("bg", bgURL);
 }
 
-function mapCreate(scene) {
+function mapCreate(scene, queryParams) {
   const [x, y, angle] = [0, 0, 0];
   const params = new URL(window.location.href).searchParams;
-
-  robot = new maqueenLite(scene, "N°1", x, y, angle);
 
   const scale = Number(params.get("bgScale")) || 1;
   const scaleX = Number(params.get("bgScaleX")) || scale;

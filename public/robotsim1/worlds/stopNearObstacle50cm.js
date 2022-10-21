@@ -7,7 +7,6 @@ function mapLoad(scene) {
 }
 
 function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
   const obstacle1 = new wallRect(scene, 545, 0, 30, 200);
 }
 

@@ -135,6 +135,20 @@ class Simul extends Phaser.Scene {
     this.params = new URL(window.location.href).searchParams;
   }
 
+  async createRobot() {
+    const createRobot = {
+      LITE: maqueenLite,
+      PLUS1: maqueenPlus,
+    };
+    const robotType = (this.params.get("robotType") || "LITE").toUpperCase();
+    console.log("creating robot of type", robotType);
+    const x = this.params.get("x") || 0;
+    const y = this.params.get("y") || 0;
+    const angle = this.params.get("angle") || 0;
+
+    new createRobot[robotType](this, "N°1", x, y, angle);
+  }
+
   async preload() {
     await this.load.json("liteShape", "assets/liteShape.json");
     await this.load.json("plusShape", "assets/plusShape.json");
@@ -148,11 +162,14 @@ class Simul extends Phaser.Scene {
       frameHeight: 103,
     });
 
-    await this.mapLoad(this);
+    await this.mapLoad(this, this.params);
   }
 
   async create() {
     this.RaycasterDomain = [];
+
+    // creating the default robot
+    await this.createRobot();
 
     await this.mapCreate(this, this.params);
 

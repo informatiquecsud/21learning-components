@@ -1,9 +1,8 @@
-function mapLoad(scene) {
+function mapLoad(scene, params) {
   scene.load.image("circle", "worlds/bg/circle-50cm.png");
 }
 
-function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
+function mapCreate(scene, params) {
   new Picture(scene, "circle", 0, 0, 0, 1.1, 1.1);
 }
 

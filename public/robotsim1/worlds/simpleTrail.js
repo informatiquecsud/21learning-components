@@ -28,8 +28,6 @@ function follow_line(scene) {
 }
 
 function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
-
   follow_line(scene);
 }
 

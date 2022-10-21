@@ -2,12 +2,11 @@
 
 */
 
-function mapLoad(scene) {
+function mapLoad(scene, queryParams) {
   // scene.load.image("circle", "worlds/bg/circle-50cm.png");
 }
 
-function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
+function mapCreate(scene, queryParams) {
   xWall1 = getRandomInt(-600, -200);
   xWall2 = xWall1 + 800;
 

@@ -1,8 +1,6 @@
-function mapLoad(scene) {}
+function mapLoad(scene, params) {}
 
-function mapCreate(scene) {
-  new maqueenLite(scene, "N°1", 0, 0, 0);
-}
+function mapCreate(scene, params) {}
 
 function sceneCreated({ overlayScene, robots }) {
   overlayScene.freeMode();

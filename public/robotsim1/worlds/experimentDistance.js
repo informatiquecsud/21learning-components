@@ -21,7 +21,6 @@ function mapCreate(scene) {
 
   // TODO: how to move the obstacle ?
 
-  new maqueenLite(scene, "N°1", 0, 0, 0);
   // new Picture(scene, "circle", 0, 0, 0, 1.1, 1.1);
   const obstacle1 = new wallRect(scene, 500, 0, 30, 200);
   obstacle1.body.setStatic(false);

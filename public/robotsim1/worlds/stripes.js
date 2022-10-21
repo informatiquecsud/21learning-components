@@ -31,7 +31,7 @@ function slalom(scene, nb, delta, start = 300, radius = 30) {
   }
 }
 
-async function mapCreate(scene) {
+async function mapCreate(scene, queryParams) {
   slalom(scene, 3, 300, 300, 35);
 }
 

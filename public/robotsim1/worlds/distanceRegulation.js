@@ -2,11 +2,11 @@
 Example1 (robot following obstacle) :
 */
 
-function mapLoad(scene) {
+function mapLoad(scene, params) {
   // scene.load.image("circle", "worlds/bg/circle-50cm.png");
 }
 
-function mapCreate(scene) {
+function mapCreate(scene, params) {
   // make the wall jump randomly
   // On renvoie un entier aléatoire entre une valeur min (incluse)
   // et une valeur max (exclue).
@@ -26,7 +26,6 @@ function mapCreate(scene) {
 
   // TODO: how to move the obstacle ?
 
-  new maqueenLite(scene, "N°1", 0, 0, 0);
   // new Picture(scene, "circle", 0, 0, 0, 1.1, 1.1);
   const obstacle1 = new wallRect(scene, 500, 0, 30, 200);
   obstacle1.body.setStatic(false);
