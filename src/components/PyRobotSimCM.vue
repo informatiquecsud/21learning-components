@@ -135,7 +135,7 @@
                 >
               </q-tab-panel>
               <q-tab-panel name="repl">Not implemented yet ...</q-tab-panel>
-              <q-tab-panel name="asyncifiedCode">
+              <q-tab-panel name="asyncifiedCode" :style="{ padding: '1px' }">
                 <Codemirror
                   v-model:value="asyncCode"
                   :options="{ ...cmOptions, readOnly: true }"
