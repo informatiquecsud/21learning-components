@@ -92,7 +92,6 @@ class simulation {
   ) {
     return new zoneRect(
       this.scenes[0],
-      scene,
       x,
       y,
       width,
