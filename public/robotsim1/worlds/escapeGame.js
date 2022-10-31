@@ -2,9 +2,7 @@
 
 */
 
-function mapLoad(scene) {
-  // scene.load.image("circle", "worlds/bg/circle-50cm.png");
-}
+function mapLoad(scene) {}
 
 function mapCreate(scene, params) {
   const prisonWidth = parseInt(params.get("prisonWidth")) || 1200;
