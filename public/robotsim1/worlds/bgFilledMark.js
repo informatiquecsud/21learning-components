@@ -10,6 +10,8 @@ function mapLoad(scene, queryParams) {
 function mapCreate(scene, queryParams) {
   const [x, y, angle] = [0, 0, 0];
 
+  const robot = scene.robots[0];
+
   robot.setPosition(-55, 118);
   robot.setAngle(-30);
 
