@@ -9,14 +9,6 @@
             color="white"
             text-color="black"
             class="q-ma-sm"
-            @click="loadLastCode"
-            >Reload</q-btn
-          >
-          <q-btn
-            v-if="false"
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
             @click="asyncifyPyCode"
             >Asyncify</q-btn
           >
@@ -26,6 +18,14 @@
             class="q-ma-sm"
             @click="shareAsURL"
             >Share</q-btn
+          >
+          <q-btn
+            v-if="true"
+            color="white"
+            text-color="black"
+            class="q-ma-sm"
+            @click="loadLastCode"
+            >Restore</q-btn
           >
           <q-toolbar-title>PyRobotSim</q-toolbar-title>
         </q-toolbar>
@@ -59,6 +59,30 @@
 
         <q-separator />
         <pre v-if="false">{{ editorFiles }}</pre>
+        <q-item v-if="activeFile === 'main.py'">
+          <q-item-section avatar>History</q-item-section>
+          <q-item-section>
+            <q-slider
+              class="q-pl-md q-pr-md"
+              v-model="editorFiles[activeFileIndex].activeRevision"
+              :min="0"
+              :max="editorFiles[activeFileIndex].revisions.length - 1"
+              :step="1"
+              label
+              snap
+              markers
+              color="light-green"
+              @update:model-value="
+                (value) => {
+                  editorFiles[activeFileIndex].activeRevision = value;
+                  const { revisions, activeRevision } =
+                    editorFiles[activeFileIndex];
+                  editorFiles[activeFileIndex].data = revisions[activeRevision];
+                }
+              "
+            />
+          </q-item-section>
+        </q-item>
         <q-tab-panels v-model="activeFile" animated>
           <Codemirror
             v-for="(file, index) in editorFiles"
@@ -69,7 +93,10 @@
             border
             placeholder="test placeholder"
             :style="{
-              height: 'calc(100vh - 111px)',
+              height:
+                activeFile === 'main.py'
+                  ? 'calc(100vh - 159px)'
+                  : 'calc(100vh - 111px)',
             }"
             @change="onEditorChange"
           />
@@ -207,11 +234,17 @@ const editorFiles = ref([
   {
     path: "main.py",
     data: "",
+    revisions: [""],
+    activeRevision: 0,
     show: true,
   },
 ]);
 const activeFile = ref("main.py");
 const asyncCode = ref("");
+
+const activeFileIndex = computed(() => {
+  return editorFiles.value.findIndex((item) => item.path === activeFile.value);
+});
 
 const cmOptions = {
   mode: "text/x-python", // Language mode
@@ -219,6 +252,7 @@ const cmOptions = {
   lineNumbers: true, // Show line number
   smartIndent: true, // Smart indent
   indentUnit: 4, // The smart indent unit is 2 spaces in length
+  indentWithTabs: false,
   foldGutter: true, // Code folding
   styleActiveLine: true, // Display the style of the selected row
 };
@@ -342,6 +376,13 @@ const writeFilesToFS = (files, pyodide) => {
 const runCode = async () => {
   stdout.value = "";
   stderr.value = "";
+
+  let { revisions, activeRevision } = editorFiles.value[0];
+
+  if (revisions[revisions.length - 1] !== editorFiles.value[0].data) {
+    revisions.push(editorFiles.value[0].data);
+    editorFiles.value[0].activeRevision = revisions.length - 1;
+  }
 
   localStorage.setItem("editorFiles", JSON.stringify(editorFiles.value));
 
@@ -469,6 +510,7 @@ onMounted(async () => {
 
   if (route.query.main !== undefined) {
     editorFiles.value[0].data = atob(route.query.main);
+    editorFiles.value[0].revisions[0] = editorFiles.value[0].data;
   }
 
   if (route.query.vsplit !== undefined) {
@@ -511,7 +553,7 @@ onMounted(async () => {
 
 <style scoped>
 .CodeMirror {
-  font-size: 1.5em;
+  font-size: 1.5em !important;
 }
 
 .stderr-msg {
