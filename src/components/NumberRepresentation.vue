@@ -79,9 +79,14 @@
         </td>
       </tr>
 
-      <tr v-if="base > 10">
+      <tr v-if="true">
         <th scope="row">Chiffre en base {{ base }}</th>
-        <td v-for="(nbCoin, i) in nbCoins" :key="i" scope="row">
+        <td
+          class="hex-digit"
+          v-for="(nbCoin, i) in nbCoins"
+          :key="i"
+          scope="row"
+        >
           {{ toDigit(nbCoins[i]) }}
         </td>
       </tr>
@@ -92,8 +97,28 @@
         </td>
       </tr>
       <tr>
-        <th>Valeur totale (décimale)</th>
-        <td class="totalValue">{{ totalValue }}</td>
+        <th>
+          Valeur totale (décimale)
+          <q-btn
+            label="+"
+            color="primary"
+            round
+            size="10px"
+            @click="(e) => incrementValue(0)"
+          ></q-btn>
+          <q-btn
+            :disable="totalValue <= 0"
+            class="q-ml-sm"
+            label="-"
+            color="primary"
+            round
+            size="10px"
+            @click="(e) => decrementValue(0)"
+          ></q-btn>
+        </th>
+        <td class="totalValue">
+          {{ totalValue }}
+        </td>
       </tr>
     </tbody>
   </table>
@@ -124,6 +149,24 @@ onMounted(async () => {
 const toDigit = (number) => {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   return number >= 10 ? alphabet[number - 10] : String(number);
+};
+
+const incrementValue = (index) => {
+  if (nbCoins.value[nbColumns.value - 1 - index] < base.value - 1) {
+    nbCoins.value[nbColumns.value - 1 - index]++;
+  } else {
+    nbCoins.value[nbColumns.value - 1 - index] = 0;
+    incrementValue(index + 1);
+  }
+};
+
+const decrementValue = (index) => {
+  if (nbCoins.value[nbColumns.value - 1 - index] > 0) {
+    nbCoins.value[nbColumns.value - 1 - index]--;
+  } else {
+    nbCoins.value[nbColumns.value - 1 - index] = base.value - 1;
+    decrementValue(index + 1);
+  }
 };
 
 const weights = computed(() => {
@@ -183,5 +226,11 @@ td.totalValue {
   font-weight: bold;
   color: red;
   font-size: 1.3rem;
+}
+
+.hex-digit {
+  color: green;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 </style>
