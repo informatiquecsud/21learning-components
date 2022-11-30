@@ -50,6 +50,7 @@
             v-model.number="nbCoins[i]"
             type="number"
             filled
+            dense
             style="max-width: 60px"
             :rules="[
               (val) =>
@@ -77,6 +78,13 @@
           ></q-btn>
         </td>
       </tr>
+
+      <tr v-if="base > 10">
+        <th scope="row">Chiffre en base {{ base }}</th>
+        <td v-for="(nbCoin, i) in nbCoins" :key="i" scope="row">
+          {{ toDigit(nbCoins[i]) }}
+        </td>
+      </tr>
       <tr>
         <th scope="row">Total par type de billet</th>
         <td v-for="(nbCoin, i) in nbCoins" :key="i" scope="row">
@@ -84,7 +92,7 @@
         </td>
       </tr>
       <tr>
-        <th>Valeur totale</th>
+        <th>Valeur totale (décimale)</th>
         <td class="totalValue">{{ totalValue }}</td>
       </tr>
     </tbody>
@@ -112,6 +120,11 @@ onMounted(async () => {
   console.log("nbCoins", nbCoins.value, Array(nbColumns.value).fill(0));
   nbCoins.value = Array(nbColumns.value).fill(0);
 });
+
+const toDigit = (number) => {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return number >= 10 ? alphabet[number - 10] : String(number);
+};
 
 const weights = computed(() => {
   let result = [];
