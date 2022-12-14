@@ -11,6 +11,14 @@ const routes = [
         path: "numRepr",
         component: () => import("components/NumberRepresentation.vue"),
       },
+      {
+        path: "ArrayQueue",
+        component: () => import("components/ArrayQueue.vue"),
+      },
+      {
+        path: "Modulus",
+        component: () => import("components/CircularModulus.vue"),
+      },
       // {
       //   path: "PyListsAsCards",
       //   component: () => import("components/PyListsAsCards.vue"),
