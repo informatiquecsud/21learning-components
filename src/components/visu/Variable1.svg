@@ -1,0 +1,38 @@
+<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden">
+  <defs>
+    <filter id="fx0" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer color-interpolation-filters="sRGB">
+        <feFuncR type="discrete" tableValues="0 0"/>
+        <feFuncG type="discrete" tableValues="0 0"/>
+        <feFuncB type="discrete" tableValues="0 0"/>
+        <feFuncA type="linear" slope="0.4" intercept="0"/>
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="1.77778 1.77778"/>
+    </filter>
+    <clipPath id="clip1">
+      <rect x="0" y="0" width="1280" height="720"/>
+    </clipPath>
+    <clipPath id="clip2">
+      <path d="M453.5 85.5001C449.082 85.5001 445.5 89.0819 445.5 93.5003L445.5 125.5C445.5 129.918 449.082 133.5 453.5 133.5L616.5 133.5C620.918 133.5 624.5 129.918 624.5 125.5L624.5 93.5003C624.5 89.0819 620.918 85.5001 616.5 85.5001ZM1.90735e-05 1.07288e-05 1280 1.07288e-05 1280 720 1.90735e-05 720Z" fill-rule="evenodd" clip-rule="evenodd"/>
+    </clipPath>
+    <clipPath id="clip3">
+      <rect x="-2" y="-2" width="197" height="67"/>
+    </clipPath>
+    <clipPath id="clip4">
+      <rect x="0" y="0" width="194" height="63"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip1)">
+    <rect x="0" y="0" width="1280" height="720" fill="#FFFFFF"/>
+    <g clip-path="url(#clip2)">
+      <g clip-path="url(#clip3)" filter="url(#fx0)" transform="translate(441 81)">
+        <g clip-path="url(#clip4)">
+          <path d="M7.32849 15.3287C7.32849 10.9103 10.9103 7.32848 15.3287 7.32848L178.328 7.32848C182.747 7.32848 186.328 10.9103 186.328 15.3287L186.328 47.3283C186.328 51.7467 182.747 55.3285 178.328 55.3285L15.3287 55.3285C10.9103 55.3285 7.32849 51.7467 7.32849 47.3283Z" stroke="#000000" stroke-miterlimit="8" fill="#FFFFFF" fill-rule="evenodd"/>
+        </g>
+      </g>
+    </g>
+    <path d="M445.5 93.5003C445.5 89.0819 449.082 85.5001 453.5 85.5001L616.5 85.5001C620.918 85.5001 624.5 89.0819 624.5 93.5003L624.5 125.5C624.5 129.918 620.918 133.5 616.5 133.5L453.5 133.5C449.082 133.5 445.5 129.918 445.5 125.5Z" stroke="#000000" stroke-width="1.33333" stroke-miterlimit="8" fill="#FFFFFF" fill-rule="evenodd"/>
+    <text font-family="Calibri,Calibri_MSFontService,sans-serif" font-weight="400" font-size="24" transform="translate(297.29 116)">name</text>
+    <path d="M378 108 437.917 108 437.917 110 378 110ZM436.584 105 444.584 109 436.584 113Z"/>
+  </g>
+</svg>
