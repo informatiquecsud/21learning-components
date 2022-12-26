@@ -9,7 +9,8 @@
       >
         <text
           class="array-index"
-          v-bind="{ x: 25 + 50 * index, y: 35, stroke: 'grey' }"
+          text-anchor="middle"
+          v-bind="{ x: 30 + 50 * index, y: 35, stroke: 'grey' }"
         >
           {{ index }}
         </text>
@@ -24,6 +25,9 @@
             stroke: 'black',
           }"
         ></rect>
+        <text :x="30 + 50 * index" y="65" text-anchor="middle">
+          {{ theArray[index] }}
+        </text>
         <TextArrow
           style="font-size: 0.8em"
           direction="right"
@@ -32,7 +36,7 @@
             length: 30,
           }"
           :pos="{
-            x: 30,
+            x: frontPointerX,
             y: 90,
             angle: -90,
           }"
@@ -46,7 +50,7 @@
             length: 30,
           }"
           :pos="{
-            x: 30,
+            x: rearPointerX,
             y: 20,
             angle: -90,
           }"
@@ -68,9 +72,25 @@
         :value="attrs._rear"
         :pos="{ x: 50, y: 350 }"
       ></Variable>
+      <text
+        x="50"
+        y="230"
+        font-family="Courrier New"
+        font-size="20"
+        fill="red"
+        font-weight="bold"
+        v-show="errorMsg !== ''"
+      >
+        {{ errorMsg }}
+      </text>
     </svg>
     <q-toolbar class="shadow-2 rounded-borders controls-toolbar">
-      <q-btn color="primary" label="Enqueue" class="q-mr-sm" />
+      <q-btn
+        color="primary"
+        label="Enqueue"
+        class="q-mr-sm"
+        @click="onEnqueue"
+      />
 
       <div>
         <q-input
@@ -78,17 +98,20 @@
           class="q-mt-sm q-mb-sm"
           outlined
           type="text"
-          style="max-width: 50px"
+          style="max-width: 100px"
           input-style="display: inline"
+          v-model="itemToEnqueue"
+          autofocus
+          clearable
+          placeholder="New value"
+          @keyup.ctrl.enter="onEnqueue"
+          @keyup.ctrl.delete="onDequeue"
         >
-          <template q-slot:prepend>
-            <q-btn label="Enqueue" />
-          </template>
         </q-input>
       </div>
       <q-space />
 
-      <q-btn color="primary" label="Dequeue" />
+      <q-btn color="primary" label="Dequeue" @click="onDequeue" />
       <q-space />
       <q-btn label="Reset" />
 
@@ -97,17 +120,53 @@
         as child of QToolbar
       -->
     </q-toolbar>
+    <pre v-if="false">
+      {{ isFull }}
+    {{ maxSize }}
+    </pre>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 //import { range } from "../lib/utils.js";
 import TextArrow from "./visu/TextArrow.vue";
 import Variable from "./visu/Variable.vue";
 
-const theArray = ref(Array(6));
+const route = useRoute();
+
+const maxSize = ref(2);
+
+const theArray = ref(null);
+
+const itemToEnqueue = ref("");
+const itemDequeued = ref("");
+
+const rearPointerX = ref(30);
+const frontPointerX = ref(30);
+
+const animateInt = (obj, config) => {
+  let { duration, from, to, steps } = config;
+
+  // default values
+  from = from || obj.value;
+  steps = Math.abs(steps || to - from);
+  duration = duration || 1000;
+
+  const stepSize = (to - from) / steps;
+  let nbStepsMade = 0;
+
+  const interval = setInterval(() => {
+    obj.value += stepSize;
+    nbStepsMade += 1;
+    if (nbStepsMade == steps) {
+      clearInterval(interval);
+    }
+  }, duration / steps);
+};
+
+const isAnimationRunning = ref(false);
 
 const attrs = reactive({
   _size: 0,
@@ -115,13 +174,83 @@ const attrs = reactive({
   _rear: 0,
 });
 
-const push = (item) => {
-  _size.value += 1;
+const errorMsg = ref("");
+
+const enqueue = (item) => {
+  if (isFull.value) {
+    errorMsg.value = "QueueOverflowError: unable to enqueue in full Queue";
+    return;
+  }
+  errorMsg.value = "";
+  attrs._size += 1;
+  theArray.value[attrs._rear] = item;
+  attrs._rear = (attrs._rear + 1) % maxSize.value;
 };
+
+const dequeue = () => {
+  if (isEmpty.value) {
+    errorMsg.value = "EmptyQueueError: unable to dequeue from empty Queue";
+    return;
+  }
+  errorMsg.value = "";
+  attrs._size -= 1;
+  const item = theArray.value[attrs._front];
+  attrs._front = (attrs._front + 1) % maxSize.value;
+
+  return item;
+};
+
+const isFull = computed(() => {
+  return attrs._size === maxSize.value;
+});
+
+const isEmpty = computed(() => {
+  return attrs._size === 0;
+});
 
 const onElementClick = (index, element) => {
   alert(`boîte no ${index}`);
 };
+
+const onEnqueue = (event) => {
+  enqueue(itemToEnqueue.value);
+  itemToEnqueue.value = "";
+};
+
+const onDequeue = (event) => {
+  const item = dequeue();
+  itemDequeued.value = item;
+};
+
+watch(
+  () => ({ ...attrs }),
+  (newValue, oldValue) => {
+    console.log(newValue, oldValue);
+    if (newValue._rear !== oldValue._rear) {
+      console.log("new value", newValue._rear);
+      animateInt(rearPointerX, {
+        from: 30 + oldValue._rear * 50,
+        to: 30 + newValue._rear * 50,
+        duration: 100,
+      });
+    }
+
+    if (newValue._front !== oldValue._front) {
+      console.log("new value", newValue._rear);
+      animateInt(frontPointerX, {
+        from: 30 + oldValue._front * 50,
+        to: 30 + newValue._front * 50,
+        duration: 100,
+      });
+    }
+  }
+);
+
+onMounted(async () => {
+  console.log("route.query", route.query);
+  maxSize.value = Number(route.query.maxSize) || 5;
+  theArray.value = Array(maxSize.value);
+});
 </script>
 
 <style lang="scss" scoped>
