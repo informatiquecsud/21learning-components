@@ -106,6 +106,7 @@
           placeholder="New value"
           @keyup.ctrl.enter="onEnqueue"
           @keyup.ctrl.delete="onDequeue"
+          @keyup.esc="onReset"
         >
         </q-input>
       </div>
@@ -113,7 +114,7 @@
 
       <q-btn color="primary" label="Dequeue" @click="onDequeue" />
       <q-space />
-      <q-btn label="Reset" />
+      <q-btn label="Reset" @click="onReset" />
 
       <!--
         notice shrink property since we are placing it
@@ -246,8 +247,19 @@ watch(
   }
 );
 
+const reset = () => {
+  attrs._front = 0;
+  attrs._rear = 0;
+  attrs._size = 0;
+
+  theArray.value = Array(maxSize.value);
+};
+
+const onReset = (event) => {
+  reset();
+};
+
 onMounted(async () => {
-  console.log("route.query", route.query);
   maxSize.value = Number(route.query.maxSize) || 5;
   theArray.value = Array(maxSize.value);
 });
