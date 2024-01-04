@@ -4,14 +4,14 @@
     <pre v-if="false">{{ theArray && theArray.slice(0) }}</pre>
     <div class="abstract-view">
       Abstract view of the Queue :
-      <pre>{{ abstractViewStr || "EmptyQueue" }}</pre>
+      <pre> {{ abstractViewStr }}</pre>
     </div>
     <svg width="100%" height="400px">
       <g transform="translate(0 50) scale(1.1, 1.1)" v-for="(element, index) in theArray" class="" :key="index">
         <text class="array-index" text-anchor="middle" v-bind="{ x: 30 + 50 * index, y: 35, stroke: 'grey' }">
           {{ index }}
         </text>
-        <rect @click="(e) => onElementClick(index, element)" v-bind="{
+        <rect :class="isOccupied(index) ? 'filled-queue-slot' : ''" @click="(e) => onElementClick(index, element)" v-bind="{
           x: 10 + 50 * index,
           y: 40,
           width: 40,
@@ -151,7 +151,8 @@ const isFull = computed(() => {
 });
 
 const abstractViewStr = computed(() => {
-  return abstractView.value.join(' | ')
+  console.log("view", abstractView.value)
+  return (abstractView.value && abstractView.value.length > 0) ? `Rear >> ${abstractView.value.join(' | ')} >> Front` : "EmptyQueue"
 })
 
 const isEmpty = computed(() => {
@@ -183,8 +184,6 @@ watch(
     const rightPart = (_rear <= _front) ? theArray.value.slice(0, _rear) : []
     abstractView.value = _size ? leftPart.concat(rightPart).reverse() : []
 
-
-
     if (newValue._rear !== oldValue._rear) {
       console.log("new value", newValue._rear);
       animateInt(rearPointerX, {
@@ -204,6 +203,15 @@ watch(
     }
   }
 );
+
+const isOccupied = (index) => {
+  const { _front, _rear, _size } = attrs
+  if (_rear > _front || _size === 0) {
+    return index >= _front && index < _rear
+  } else {
+    return index >= _front || index < _rear
+  }
+}
 
 const reset = () => {
   attrs._front = 0;
@@ -250,5 +258,9 @@ svg {
   font-weight: 700;
   background-color: antiquewhite;
   padding: 1rem
+}
+
+.filled-queue-slot {
+  fill: lightgray
 }
 </style>
