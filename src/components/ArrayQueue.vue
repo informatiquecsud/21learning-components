@@ -1,113 +1,57 @@
 <template>
   <div class="svg-ds-visu">
+    <pre v-if="false">{{ theArray }}</pre>
+    <pre v-if="false">{{ theArray && theArray.slice(0) }}</pre>
+    <div class="abstract-view">
+      Abstract view of the Queue :
+      <pre>{{ abstractViewStr || "EmptyQueue" }}</pre>
+    </div>
     <svg width="100%" height="400px">
-      <g
-        transform="translate(0 50) scale(1.1, 1.1)"
-        v-for="(element, index) in theArray"
-        class=""
-        :key="index"
-      >
-        <text
-          class="array-index"
-          text-anchor="middle"
-          v-bind="{ x: 30 + 50 * index, y: 35, stroke: 'grey' }"
-        >
+      <g transform="translate(0 50) scale(1.1, 1.1)" v-for="(element, index) in theArray" class="" :key="index">
+        <text class="array-index" text-anchor="middle" v-bind="{ x: 30 + 50 * index, y: 35, stroke: 'grey' }">
           {{ index }}
         </text>
-        <rect
-          @click="(e) => onElementClick(index, element)"
-          v-bind="{
-            x: 10 + 50 * index,
-            y: 40,
-            width: 40,
-            height: 40,
-            fill: 'white',
-            stroke: 'black',
-          }"
-        ></rect>
+        <rect @click="(e) => onElementClick(index, element)" v-bind="{
+          x: 10 + 50 * index,
+          y: 40,
+          width: 40,
+          height: 40,
+          fill: 'white',
+          stroke: 'black',
+        }"></rect>
         <text :x="30 + 50 * index" y="65" text-anchor="middle">
           {{ theArray[index] }}
         </text>
-        <TextArrow
-          style="font-size: 0.8em"
-          direction="right"
-          text="Front"
-          :shape="{
-            length: 30,
-          }"
-          :pos="{
-            x: frontPointerX,
-            y: 90,
-            angle: -90,
-          }"
-          :attrs="{}"
-        ></TextArrow>
-        <TextArrow
-          style="font-size: 0.8em"
-          direction="left"
-          text="Rear"
-          :shape="{
-            length: 30,
-          }"
-          :pos="{
-            x: rearPointerX,
-            y: 20,
-            angle: -90,
-          }"
-          :attrs="{}"
-        ></TextArrow>
+        <TextArrow style="font-size: 0.8em" direction="right" text="Front" :shape="{
+          length: 30,
+        }" :pos="{
+  x: frontPointerX,
+  y: 90,
+  angle: -90,
+}" :attrs="{}"></TextArrow>
+        <TextArrow style="font-size: 0.8em" direction="left" text="Rear" :shape="{
+          length: 30,
+        }" :pos="{
+  x: rearPointerX,
+  y: 20,
+  angle: -90,
+}" :attrs="{}"></TextArrow>
       </g>
-      <Variable
-        name="_size"
-        :value="attrs._size"
-        :pos="{ x: 50, y: 250 }"
-      ></Variable>
-      <Variable
-        name="_front"
-        :value="attrs._front"
-        :pos="{ x: 50, y: 300 }"
-      ></Variable>
-      <Variable
-        name="_rear"
-        :value="attrs._rear"
-        :pos="{ x: 50, y: 350 }"
-      ></Variable>
-      <text
-        x="50"
-        y="230"
-        font-family="Courrier New"
-        font-size="20"
-        fill="red"
-        font-weight="bold"
-        v-show="errorMsg !== ''"
-      >
+      <Variable name="_size" :value="attrs._size" :pos="{ x: 50, y: 250 }"></Variable>
+      <Variable name="_front" :value="attrs._front" :pos="{ x: 50, y: 300 }"></Variable>
+      <Variable name="_rear" :value="attrs._rear" :pos="{ x: 50, y: 350 }"></Variable>
+      <text x="50" y="230" font-family="Courrier New" font-size="20" fill="red" font-weight="bold"
+        v-show="errorMsg !== ''">
         {{ errorMsg }}
       </text>
     </svg>
     <q-toolbar class="shadow-2 rounded-borders controls-toolbar">
-      <q-btn
-        color="primary"
-        label="Enqueue"
-        class="q-mr-sm"
-        @click="onEnqueue"
-      />
+      <q-btn color="primary" label="Enqueue" class="q-mr-sm" @click="onEnqueue" />
 
       <div>
-        <q-input
-          dense
-          class="q-mt-sm q-mb-sm"
-          outlined
-          type="text"
-          style="max-width: 100px"
-          input-style="display: inline"
-          v-model="itemToEnqueue"
-          autofocus
-          clearable
-          placeholder="New value"
-          @keyup.ctrl.enter="onEnqueue"
-          @keyup.ctrl.delete="onDequeue"
-          @keyup.esc="onReset"
-        >
+        <q-input dense class="q-mt-sm q-mb-sm" outlined type="text" style="max-width: 100px" input-style="display: inline"
+          v-model="itemToEnqueue" autofocus clearable placeholder="New value" @keyup.ctrl.enter="onEnqueue"
+          @keyup.ctrl.delete="onDequeue" @keyup.esc="onReset">
         </q-input>
       </div>
       <q-space />
@@ -140,6 +84,7 @@ const route = useRoute();
 const maxSize = ref(2);
 
 const theArray = ref(null);
+const abstractView = ref([])
 
 const itemToEnqueue = ref("");
 const itemDequeued = ref("");
@@ -205,6 +150,10 @@ const isFull = computed(() => {
   return attrs._size === maxSize.value;
 });
 
+const abstractViewStr = computed(() => {
+  return abstractView.value.join(' | ')
+})
+
 const isEmpty = computed(() => {
   return attrs._size === 0;
 });
@@ -227,6 +176,15 @@ watch(
   () => ({ ...attrs }),
   (newValue, oldValue) => {
     console.log(newValue, oldValue);
+
+    const { _front, _rear, _size } = newValue
+
+    const leftPart = theArray.value.slice(_front, _front + _size)
+    const rightPart = (_rear <= _front) ? theArray.value.slice(0, _rear) : []
+    abstractView.value = _size ? leftPart.concat(rightPart).reverse() : []
+
+
+
     if (newValue._rear !== oldValue._rear) {
       console.log("new value", newValue._rear);
       animateInt(rearPointerX, {
@@ -285,5 +243,12 @@ svg {
 
 .controls-toolbar {
   min-width: 380px;
+}
+
+.abstract-view {
+  font-size: larger;
+  font-weight: 700;
+  background-color: antiquewhite;
+  padding: 1rem
 }
 </style>
