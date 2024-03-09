@@ -2,30 +2,12 @@
   <div v-if="false" class="q-pa-md">
     <q-badge color="secondary">Base </q-badge>
 
-    <q-slider
-      v-model="base"
-      :min="2"
-      :max="10"
-      :step="1"
-      markers
-      marker-labels
-      color="purple"
-      label
-    />
+    <q-slider v-model="base" :min="2" :max="10" :step="1" markers marker-labels color="purple" label />
   </div>
   <div v-if="false" class="q-pa-md">
     <q-badge color="secondary">Nombre de colonnes </q-badge>
 
-    <q-slider
-      v-model="nbColumns"
-      :min="2"
-      :max="64"
-      :step="1"
-      markers
-      marker-labels
-      color="red"
-      label
-    />
+    <q-slider v-model="nbColumns" :min="2" :max="64" :step="1" markers marker-labels color="red" label />
   </div>
   <table>
     <thead>
@@ -39,54 +21,25 @@
     <tbody>
       <tr>
         <th scope="row">
-          Nombre de billets <br /><q-btn
-            label="Reset"
-            color="primary"
-            @click="reset"
-          ></q-btn>
+          Nombre de billets <br /><q-btn label="Reset" color="primary" @click="reset"></q-btn>
         </th>
         <td v-for="(nbCoin, i) in nbCoins" :key="i" scope="row">
-          <q-input
-            v-model.number="nbCoins[i]"
-            type="number"
-            filled
-            dense
-            style="max-width: 60px"
-            :rules="[
-              (val) =>
-                val < base ||
-                'Le nombre de billets doit être inférieur à la base',
-              (val) => val >= 0 || 'Le nombre de billets doit être positif',
-            ]"
-          />
-          <q-btn
-            :disable="nbCoins[i] >= base - 1"
-            label="+"
-            color="primary"
-            round
-            size="10px"
-            @click="(e) => nbCoins[i]++"
-          ></q-btn>
-          <q-btn
-            :disable="nbCoins[i] === 0"
-            class="q-ml-sm"
-            label="-"
-            color="primary"
-            round
-            size="10px"
-            @click="(e) => nbCoins[i]--"
-          ></q-btn>
+          <q-input v-model.number="nbCoins[i]" type="number" filled dense style="max-width: 60px" :rules="[
+    (val) =>
+      val < base ||
+      'Le nombre de billets doit être inférieur à la base',
+    (val) => val >= 0 || 'Le nombre de billets doit être positif',
+  ]" />
+          <q-btn :disable="nbCoins[i] >= base - 1" label="+" color="primary" round size="10px"
+            @click="(e) => nbCoins[i]++"></q-btn>
+          <q-btn :disable="nbCoins[i] === 0" class="q-ml-sm" label="-" color="primary" round size="10px"
+            @click="(e) => nbCoins[i]--"></q-btn>
         </td>
       </tr>
 
       <tr v-if="true">
         <th scope="row">Chiffre en base {{ base }}</th>
-        <td
-          class="hex-digit"
-          v-for="(nbCoin, i) in nbCoins"
-          :key="i"
-          scope="row"
-        >
+        <td class="hex-digit" v-for="(nbCoin, i) in nbCoins" :key="i" scope="row">
           {{ toDigit(nbCoins[i]) }}
         </td>
       </tr>
@@ -99,22 +52,9 @@
       <tr>
         <th>
           Valeur totale (décimale)
-          <q-btn
-            label="+"
-            color="primary"
-            round
-            size="10px"
-            @click="(e) => incrementValue(0)"
-          ></q-btn>
-          <q-btn
-            :disable="totalValue <= 0"
-            class="q-ml-sm"
-            label="-"
-            color="primary"
-            round
-            size="10px"
-            @click="(e) => decrementValue(0)"
-          ></q-btn>
+          <q-btn label="+" color="primary" round size="10px" @click="(e) => incrementValue(0)"></q-btn>
+          <q-btn :disable="totalValue <= 0" class="q-ml-sm" label="-" color="primary" round size="10px"
+            @click="(e) => decrementValue(0)"></q-btn>
         </th>
         <td class="totalValue">
           {{ totalValue }}
@@ -133,17 +73,42 @@ const route = useRoute();
 const nbColumns = ref(5);
 const base = ref(5);
 const nbCoins = ref([]);
+// const number = ref(0);
 
 const reset = () => {
   nbCoins.value = Array(nbColumns.value).fill(0);
 };
 
+const fillArrayFromRight = (arrayToFill, fillWith) => {
+  const N1 = arrayToFill.length;
+  const N2 = fillWith.length;
+
+  for (let i = 0; i < fillWith.length; i++) {
+    arrayToFill[arrayToFill.length - 1 - i] = fillWith[fillWith.length - 1 - i]
+  }
+};
+
 onMounted(async () => {
-  const { b, n } = route.query;
+  const { b, n, x } = route.query;
   base.value = Number(b) || 2;
-  nbColumns.value = Number(n) || 8;
-  console.log("nbCoins", nbCoins.value, Array(nbColumns.value).fill(0));
-  nbCoins.value = Array(nbColumns.value).fill(0);
+
+  const numberToRepresent = Number(x) || 0;
+
+  if (x !== undefined) {
+    const digits = Number(numberToRepresent).toString(base.value).split('').map(digit => parseInt(digit, base.value));
+
+    nbColumns.value = !Number(n) || Number(n) < digits.length ? digits.length : Number(n);
+    nbCoins.value = Array(nbColumns.value).fill(0);
+
+    fillArrayFromRight(nbCoins.value, digits)
+
+  } else {
+    nbColumns.value = Number(n) || 8;
+    console.log("nbCoins", nbCoins.value, Array(nbColumns.value).fill(0));
+    nbCoins.value = Array(nbColumns.value).fill(0);
+  }
+
+
 });
 
 const toDigit = (number) => {

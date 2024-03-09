@@ -2,6 +2,13 @@
 
 A Quasar Framework app
 
+## Compatibility issues
+
+```bash
+nvm use 18
+quasar dev
+```
+
 ## Install the dependencies
 
 ```bash
