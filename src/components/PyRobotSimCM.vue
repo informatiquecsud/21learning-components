@@ -392,6 +392,18 @@ const runCode = async () => {
   // );
 };
 
+function base64ToBytes(base64) {
+  const binString = atob(base64);
+  return Uint8Array.from(binString, (m) => m.codePointAt(0));
+}
+
+function bytesToBase64(bytes) {
+  const binString = Array.from(bytes, (byte) =>
+    String.fromCodePoint(byte),
+  ).join("");
+  return btoa(binString);
+}
+
 const loadLastCode = () => {
   const data = localStorage.getItem("editorFiles");
   if (data === undefined) {
@@ -495,7 +507,8 @@ onMounted(async () => {
   stdout.value = "";
 
   if (route.query.main !== undefined) {
-    editorFiles.value[0].data = atob(route.query.main);
+
+    editorFiles.value[0].data = new TextDecoder().decode(base64ToBytes(route.query.main));
     editorFiles.value[0].revisions[0] = editorFiles.value[0].data;
   }
 
