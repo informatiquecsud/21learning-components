@@ -11,6 +11,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "get-robotsim": "rsync -raz /home/donnerc/dev/tm/TM_Noe/TM_code/* public/robotsim1/",
     "surge": "quasar build && surge dist/spa/ 21learning-components.surge.sh",
+    "deploy": "quasar build && rsync -raz dist/spa ubuntu@components.courses.21-learning.com:/home/ubuntu/components --progress",
     "runestone": "quasar build  && rsync -raz dist/spa/ ~/runestone/21learning-components/ --progress --delete"
   },
   "dependencies": {

@@ -3,86 +3,32 @@
     <template v-slot:before>
       <q-header elevated>
         <q-toolbar>
-          <q-btn color="green" class="q-ma-sm" @click="runCode"
-            >Save & Run</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="loadLastCode"
-            >Reload</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="asyncifyPyCode"
-            >Asyncify</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="shareAsURL"
-            >Share</q-btn
-          >
+          <q-btn color="green" class="q-ma-sm" @click="runCode">Save & Run</q-btn>
+          <q-btn color="white" text-color="black" class="q-ma-sm" @click="loadLastCode">Reload</q-btn>
+          <q-btn color="white" text-color="black" class="q-ma-sm" @click="asyncifyPyCode">Asyncify</q-btn>
+          <q-btn color="white" text-color="black" class="q-ma-sm" @click="shareAsURL">Share</q-btn>
           <q-toolbar-title>PyRobotSim</q-toolbar-title>
         </q-toolbar>
       </q-header>
 
       <q-card>
-        <q-tabs
-          v-model="activeFile"
-          dense
-          no-caps
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
-          <q-tab
-            v-for="(file, index) in editorFiles"
-            :name="index"
-            :key="index"
-            :label="file.path"
-          />
-          <q-btn
-            class="q-ma-sm"
-            color="white"
-            icon="add"
-            label="New ..."
-            text-color="black"
-            @click="createFile"
-          />
+        <q-tabs v-model="activeFile" dense no-caps class="text-grey" active-color="primary" indicator-color="primary"
+          align="justify">
+          <q-tab v-for="(file, index) in editorFiles" :name="index" :key="index" :label="file.path" />
+          <q-btn class="q-ma-sm" color="white" icon="add" label="New ..." text-color="black" @click="createFile" />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="activeFile" animated>
-          <Codemirror
-            v-for="(file, index) in editorFiles"
-            :name="index"
-            :key="index"
-            v-model:value="editorFiles[index].data"
-            :options="cmOptions"
-            border
-            placeholder="test placeholder"
-            :height="400"
-            @change="change"
-          />
+          <Codemirror v-for="(file, index) in editorFiles" :name="index" :key="index"
+            v-model:value="editorFiles[index].data" :options="cmOptions" border placeholder="test placeholder"
+            :height="400" @change="change" />
         </q-tab-panels>
       </q-card>
 
       <q-card>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
+        <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify">
           <q-tab name="stdout" label="Stdout" />
           <q-tab name="stderr" label="Stderr" />
           <q-tab name="repl" label="REPL" />
@@ -101,24 +47,15 @@
           </q-tab-panel>
           <q-tab-panel name="repl"> REPL </q-tab-panel>
           <q-tab-panel name="asyncifiedCode">
-            <Codemirror
-              v-model:value="asyncCode"
-              :options="{ ...cmOptions, readOnly: true }"
-              border
-              :height="400"
-              @change="change"
-            />
+            <Codemirror v-model:value="asyncCode" :options="{ ...cmOptions, readOnly: true }" border :height="400"
+              @change="change" />
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
     </template>
 
-    <template v-slot:after
-      ><i-frame-robot-sim
-        src="robotsim1/TM_code/index.html"
-        :width="700"
-        :height="700"
-      ></i-frame-robot-sim>
+    <template v-slot:after><i-frame-robot-sim src="robotsim1/TM_code/index.html" :width="700"
+        :height="700"></i-frame-robot-sim>
     </template>
   </q-splitter>
 </template>
@@ -267,7 +204,7 @@ const showError = (msg) => {
 
 const betterAsyncify = (code) => {
   pyodide.runPythonAsync(`async_pyodide.__js_run_async(${code.value})`).then(
-    (value) => {},
+    (value) => { },
     (reason) => {
       writeToStderr(reason);
     }
@@ -379,7 +316,7 @@ onMounted(async () => {
   }
 
   const githubUrl = `https://raw.githubusercontent.com/informatiquecsud/mbrobot/main/maqueen-lite/pyodide-robotsim/`;
-  await loadModules(githubUrl, ["mbrobot.py", "delay.py", "microbit.py"]);
+  await loadModules(githubUrl, ["mbrobot.py", "delay.py", "microbit.py", "maqueen_plus.py"]);
 });
 </script>
 

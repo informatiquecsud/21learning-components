@@ -3,58 +3,32 @@
     <template v-slot:before>
       <q-header elevated>
         <q-toolbar>
-          <q-btn color="green" class="q-ma-sm" @click="runCode">Run</q-btn>
-          <q-btn
-            v-if="false"
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="asyncifyPyCode"
-            >Asyncify</q-btn
-          >
-          <q-btn
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="shareAsURL"
-            >Share</q-btn
-          >
-          <q-btn
-            v-if="true"
-            color="white"
-            text-color="black"
-            class="q-ma-sm"
-            @click="loadLastCode"
-            >Restore</q-btn
-          >
+          <q-btn color="green" class="q-ma-sm" @click="runCode">Simulate<q-tooltip>
+              Run the code on the simulator
+            </q-tooltip></q-btn>
+          <q-btn color="orange" class="q-ma-sm" @click="flashCode">Flash<q-tooltip>
+              Flash the code to the robot (work in progress)
+            </q-tooltip></q-btn>
+          <q-btn color="red" class="q-ma-sm" @click="resetWorld">stop & reset<q-tooltip>
+              Reloads the simulator entirely to stop the program and reset the world in its initial state
+            </q-tooltip></q-btn>
+          <q-btn v-if="false" color="white" text-color="black" class="q-ma-sm" @click="asyncifyPyCode">Asyncify</q-btn>
+          <q-btn color="white" text-color="black" class="q-ma-sm" @click="shareAsURL">Share<q-tooltip>
+              Copy a shareable link to the virtual world into clipboard. This is
+              usefull to embed the virtual world in any webpage using an iframe.
+            </q-tooltip></q-btn>
+          <q-btn v-if="true" color="white" text-color="black" class="q-ma-sm" @click="loadLastCode">Restore</q-btn>
           <q-toolbar-title>PyRobotSim</q-toolbar-title>
         </q-toolbar>
       </q-header>
 
       <div style="height: 100%">
-        <q-tabs
-          v-model="activeFile"
-          dense
-          no-caps
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-        >
-          <q-tab
-            v-for="(file, index) in editorFiles.filter((f) => f.show)"
-            :name="file.path"
-            :key="index"
-            :label="file.path"
-          />
-          <q-btn
-            class="q-ma-sm"
-            color="white"
-            icon="add_circle_outline"
-            label=""
-            text-color="black"
-            @click="createFile"
-          />
+        <q-tabs v-model="activeFile" dense no-caps class="text-grey" active-color="primary" indicator-color="primary"
+          align="justify">
+          <q-tab v-for="(file, index) in editorFiles.filter((f) => f.show)" :name="file.path" :key="index"
+            :label="file.path" />
+          <q-btn class="q-ma-sm" color="white" icon="add_circle_outline" label="" text-color="black"
+            @click="createFile" />
         </q-tabs>
 
         <q-separator />
@@ -62,44 +36,25 @@
         <q-item v-if="activeFile === 'main.py'">
           <q-item-section avatar>History</q-item-section>
           <q-item-section>
-            <q-slider
-              class="q-pl-md q-pr-md"
-              v-model="editorFiles[activeFileIndex].activeRevision"
-              :min="0"
-              :max="editorFiles[activeFileIndex].revisions.length - 1"
-              :step="1"
-              label
-              snap
-              markers
-              color="light-green"
-              @update:model-value="
-                (value) => {
-                  editorFiles[activeFileIndex].activeRevision = value;
-                  const { revisions, activeRevision } =
-                    editorFiles[activeFileIndex];
-                  editorFiles[activeFileIndex].data = revisions[activeRevision];
-                }
-              "
-            />
+            <q-slider class="q-pl-md q-pr-md" v-model="editorFiles[activeFileIndex].activeRevision" :min="0"
+              :max="editorFiles[activeFileIndex].revisions.length - 1" :step="1" label snap markers color="light-green"
+              @update:model-value="(value) => {
+                editorFiles[activeFileIndex].activeRevision = value;
+                const { revisions, activeRevision } =
+                  editorFiles[activeFileIndex];
+                editorFiles[activeFileIndex].data = revisions[activeRevision];
+              }
+                " />
           </q-item-section>
         </q-item>
         <q-tab-panels v-model="activeFile" animated>
-          <Codemirror
-            v-for="(file, index) in editorFiles"
-            :key="index"
-            :name="file.path"
-            v-model:value="file.data"
-            :options="cmOptions"
-            border
-            placeholder="test placeholder"
-            :style="{
+          <Codemirror v-for="(file, index) in editorFiles" :key="index" :name="file.path" v-model:value="file.data"
+            :options="cmOptions" border placeholder="test placeholder" :style="{
               height:
                 activeFile === 'main.py'
                   ? 'calc(100vh - 159px)'
                   : 'calc(100vh - 111px)',
-            }"
-            @change="onEditorChange"
-          />
+            }" @change="onEditorChange" />
         </q-tab-panels>
       </div>
     </template>
@@ -107,23 +62,14 @@
     <template v-slot:after>
       <q-splitter horizontal unit="px" v-model="hSplitterLocation">
         <template v-slot:before>
-          <i-frame-robot-sim
-            :src="`robotsim1/index.html?${robotsimQueryParams}`"
-            width="100%"
-            :height="robotsimIFrameHeight"
-          ></i-frame-robot-sim>
+          <i-frame-robot-sim :src="`robotsim1/index.html?${robotsimQueryParams}`" width="100%"
+            :height="robotsimIFrameHeight"></i-frame-robot-sim>
         </template>
 
         <template v-slot:after>
           <div>
-            <q-tabs
-              v-model="tab"
-              dense
-              class="text-grey"
-              active-color="primary"
-              indicator-color="primary"
-              align="justify"
-            >
+            <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary"
+              align="justify">
               <q-tab name="stdout" label="Stdout" />
               <q-tab name="stderr" label="Stderr" />
               <q-tab name="repl" label="REPL" />
@@ -132,44 +78,28 @@
 
             <q-separator />
 
-            <q-tab-panels
-              :style="{
+            <q-tab-panels :style="{
+              minHeight: '100px',
+              height: `calc(100vh - ${hSplitterLocation}px - 97px)`,
+              border: 'solid 0px red',
+            }" v-model="tab" animated>
+              <q-tab-panel name="stdout" :style="{
                 minHeight: '100px',
                 height: `calc(100vh - ${hSplitterLocation}px - 97px)`,
                 border: 'solid 0px red',
-              }"
-              v-model="tab"
-              animated
-            >
-              <q-tab-panel
-                name="stdout"
-                :style="{
-                  minHeight: '100px',
-                  height: `calc(100vh - ${hSplitterLocation}px - 97px)`,
-                  border: 'solid 0px red',
-                }"
-              >
+              }">
                 <PyStdout :stdout="stdout"></PyStdout>
               </q-tab-panel>
 
               <q-tab-panel name="stderr">
                 <pre class="stderr-msg">{{ stderr }}</pre>
-                <q-btn
-                  v-if="stderr"
-                  color="primary"
-                  @click="tab = 'asyncifiedCode'"
-                  >Highlight in the async code (WIP)</q-btn
-                >
+                <q-btn v-if="stderr" color="primary" @click="tab = 'asyncifiedCode'">Highlight in the async code
+                  (WIP)</q-btn>
               </q-tab-panel>
               <q-tab-panel name="repl">Not implemented yet ...</q-tab-panel>
               <q-tab-panel name="asyncifiedCode" :style="{ padding: '1px' }">
-                <Codemirror
-                  v-model:value="asyncCode"
-                  :options="{ ...cmOptions, readOnly: true }"
-                  border
-                  height="calc(100%)"
-                  @change="change"
-                />
+                <Codemirror v-model:value="asyncCode" :options="{ ...cmOptions, readOnly: true }" border
+                  height="calc(100%)" @change="change" />
               </q-tab-panel>
             </q-tab-panels>
           </div>
@@ -360,7 +290,7 @@ const showError = (msg) => {
 
 const betterAsyncify = (code) => {
   pyodide.runPythonAsync(`async_pyodide.__js_run_async(${code.value})`).then(
-    (value) => {},
+    (value) => { },
     (reason) => {
       writeToStderr(reason);
     }
@@ -371,6 +301,31 @@ const writeFilesToFS = (files, pyodide) => {
   files.forEach((f) => {
     pyodide.FS.writeFile(f.path, f.data);
   });
+};
+
+const resetWorld = async () => {
+  location.reload();
+};
+
+
+const flashCode = async () => {
+  $q.dialog({
+    title: "Flash",
+    message: `This feature is still unimplemented. Use <a target="_blank" href="https://dev.webtigerpython.21-learning.com/">WebTigerPython</a> instead to run the code on the real robot!`,
+    html: true,
+    cancel: false,
+    persistent: false,
+    color: "primary",
+  })
+    .onOk((data) => {
+
+    })
+    .onCancel(() => {
+      // console.log('>>>> Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    });
 };
 
 const runCode = async () => {
@@ -526,6 +481,8 @@ onMounted(async () => {
 
   const files = [
     { path: "mbrobot.py", show: false },
+    { path: "maqueen_plus.py", show: false },
+    { path: "oled_display.py", show: false },
     { path: "robotsim.py", show: false },
     { path: "mbrobot2.py", show: false },
     { path: "delay.py", show: false },
@@ -551,18 +508,18 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style>
 .CodeMirror {
-  font-size: 1.5em !important;
+  font-size: 1.5rem !important;
 }
 
 .stderr-msg {
-  color: red;
+  color: rgb(175, 38, 38);
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 .CodeMirror-code {
-  font-size: 1.4em;
+  font-size: 1rem;
 }
 </style>

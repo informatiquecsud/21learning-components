@@ -20,8 +20,14 @@ function mapCreate(scene, params) {
 
   const setAtRandomPosition = (rect) => {
     const { x, y } = rect.body;
+    const robot = scene.robots[0];
 
-    rect.body.setPosition(getRandomInt(500 - 200, 500 + 200), y);
+    let newX = getRandomInt(x - 90, x + 90);
+    if (newX < robot.x + 20) {
+      newX = robot.x + 20;
+    }
+
+    rect.body.setPosition(newX, y);
   };
 
   // TODO: how to move the obstacle ?
