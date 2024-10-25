@@ -409,7 +409,31 @@ const shareAsURL = () => {
   };
   router.replace({ query: queryParams });
   const url = window.location.href;
+
+  const inIframe = () => window.self !== window.top;
+  if (inIframe()) {
+    $q.dialog({
+      title: "Share code and virtual world",
+      message: `Shareable URL:`,
+      prompt: {
+        model: `${url}`,
+        type: "text", // optional
+      },
+      cancel: false,
+      persistent: false,
+    })
+      .onOk((data) => {
+      })
+      .onCancel(() => {
+        // console.log('>>>> Cancel')
+      })
+      .onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      });
+
+  }
   navigator.clipboard.writeText(url);
+
 };
 
 const robotsimIFrameHeight = computed(() => {
