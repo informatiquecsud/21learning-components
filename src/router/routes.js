@@ -12,6 +12,10 @@ const routes = [
         component: () => import("components/NumberRepresentation.vue"),
       },
       {
+        path: "utf8-encode",
+        component: () => import("components/UTF8EncodeVisu.vue"),
+      },
+      {
         path: "ArrayQueue",
         component: () => import("components/ArrayQueue.vue"),
       },
