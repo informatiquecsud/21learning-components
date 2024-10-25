@@ -132,6 +132,9 @@ import "codemirror/theme/dracula.css";
 import "codemirror/theme/rubyblue.css";
 import "codemirror/theme/eclipse.css";
 
+// keymap
+import "codemirror/keymap/sublime.js"
+
 function createFile() {
   $q.dialog({
     title: "New file name",
@@ -185,6 +188,10 @@ const cmOptions = {
   indentWithTabs: false,
   foldGutter: true, // Code folding
   styleActiveLine: true, // Display the style of the selected row
+  keyMap: "sublime",
+  extraKeys: {
+    'Tab': 'indentMore'
+  }
 };
 const props = defineProps({});
 const vSplitterLocation = ref(50);
