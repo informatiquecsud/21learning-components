@@ -141,7 +141,7 @@ def __asyncify_sleep_delay(code_str,compile_mode='exec'):
     defs.visit(oldTree)
     allDefs=defs.get_defs()
     # override sleep with asleep
-    allDefs["sleep"]="asyncio.sleep"
+    allDefs["sleep"]="sleep"
     allDefs["delay"]="delay"
     allDefs["time.sleep"]="asyncio.sleep"
     newTree=fix_missing_locations(_MakeAsyncCalls(allDefs).visit(oldTree))

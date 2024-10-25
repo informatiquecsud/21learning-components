@@ -515,7 +515,7 @@ class ultrasonicD {
     for (let i = 0; i < this.intersections.length; i++) {
       distance = Math.sqrt(
         (this.intersections[i].x - this.rayCone.origin.x) ** 2 +
-          (this.intersections[i].y - this.rayCone.origin.y) ** 2
+        (this.intersections[i].y - this.rayCone.origin.y) ** 2
       );
       distances.push(Math.round(distance));
     }
@@ -531,11 +531,11 @@ class ultrasonicD {
     this.rayCone
       .setOrigin(
         this.reference.x +
-          this.deltaOrigin *
-            Math.cos(this.reference.rotation + this.rotationOrigin),
+        this.deltaOrigin *
+        Math.cos(this.reference.rotation + this.rotationOrigin),
         this.reference.y +
-          this.deltaOrigin *
-            Math.sin(this.reference.rotation + this.rotationOrigin)
+        this.deltaOrigin *
+        Math.sin(this.reference.rotation + this.rotationOrigin)
       )
       .setAngle(this.reference.rotation - Math.PI / 2 + this.angle);
   }
@@ -567,15 +567,15 @@ class infra {
         }
 
         const xAngle0 =
-            Math.cos(-(mark.angle / 180) * Math.PI) *
-              (this.ir.x - mark.position.x) -
-            Math.sin(-(mark.angle / 180) * Math.PI) *
-              (this.ir.y - mark.position.y),
+          Math.cos(-(mark.angle / 180) * Math.PI) *
+          (this.ir.x - mark.position.x) -
+          Math.sin(-(mark.angle / 180) * Math.PI) *
+          (this.ir.y - mark.position.y),
           yAngle0 =
             Math.sin(-(mark.angle / 180) * Math.PI) *
-              (this.ir.x - mark.position.x) +
+            (this.ir.x - mark.position.x) +
             Math.cos(-(mark.angle / 180) * Math.PI) *
-              (this.ir.y - mark.position.y);
+            (this.ir.y - mark.position.y);
 
         const color = this.scene.textures.getPixel(
           xAngle0 / mark.scale.x + mark.body.width / 2,
@@ -595,11 +595,11 @@ class infra {
   update() {
     this.ir.setPosition(
       this.reference.x +
-        this.deltaOrigin *
-          Math.cos(this.reference.rotation + this.rotationOrigin),
+      this.deltaOrigin *
+      Math.cos(this.reference.rotation + this.rotationOrigin),
       this.reference.y +
-        this.deltaOrigin *
-          Math.sin(this.reference.rotation + this.rotationOrigin)
+      this.deltaOrigin *
+      Math.sin(this.reference.rotation + this.rotationOrigin)
     );
 
     if (this.isMarked()) {
@@ -633,11 +633,11 @@ class led {
   update() {
     this.led.setPosition(
       this.reference.x +
-        this.deltaOrigin *
-          Math.cos(this.reference.rotation + this.rotationOrigin),
+      this.deltaOrigin *
+      Math.cos(this.reference.rotation + this.rotationOrigin),
       this.reference.y +
-        this.deltaOrigin *
-          Math.sin(this.reference.rotation + this.rotationOrigin)
+      this.deltaOrigin *
+      Math.sin(this.reference.rotation + this.rotationOrigin)
     );
 
     if (this.on) {
@@ -667,11 +667,11 @@ class rgbLed {
   update() {
     this.rgb.setPosition(
       this.reference.x +
-        this.deltaOrigin *
-          Math.cos(this.reference.rotation + this.rotationOrigin),
+      this.deltaOrigin *
+      Math.cos(this.reference.rotation + this.rotationOrigin),
       this.reference.y +
-        this.deltaOrigin *
-          Math.sin(this.reference.rotation + this.rotationOrigin)
+      this.deltaOrigin *
+      Math.sin(this.reference.rotation + this.rotationOrigin)
     );
 
     this.rgb.fillColor = this.color;
@@ -710,22 +710,22 @@ class motor {
       .gameObject(
         scene.add.rectangle(
           reference.x +
-            this.deltaOrigin *
-              Math.cos(this.rotationOrigin + reference.rotation),
+          this.deltaOrigin *
+          Math.cos(this.rotationOrigin + reference.rotation),
           reference.y +
-            this.deltaOrigin *
-              Math.sin(this.rotationOrigin + reference.rotation),
+          this.deltaOrigin *
+          Math.sin(this.rotationOrigin + reference.rotation),
           width,
           height,
           0x808080
         ),
         scene.matter.add.rectangle(
           reference.x +
-            this.deltaOrigin *
-              Math.cos(this.rotationOrigin + reference.rotation),
+          this.deltaOrigin *
+          Math.cos(this.rotationOrigin + reference.rotation),
           reference.y +
-            this.deltaOrigin *
-              Math.sin(this.rotationOrigin + reference.rotation),
+          this.deltaOrigin *
+          Math.sin(this.rotationOrigin + reference.rotation),
           width,
           height
         )
@@ -805,9 +805,9 @@ class motor {
       rotationSpeed =
         Math.round(
           (Math.sqrt(deltaX ** 2 + deltaY ** 2) / this.radius) *
-            (100 / 12) *
-            5.6 *
-            100
+          (100 / 12) *
+          5.6 *
+          100
         ) / 100;
 
     this.angle += Math.round((rotationSpeed / Math.PI) * 2 * 80);
@@ -919,19 +919,19 @@ class maqueenLite {
     this.body.setPosition(x, y);
     this.Lmotor.wheel.setPosition(
       x +
-        this.Lmotor.deltaOrigin *
-          Math.cos(this.Lmotor.rotationOrigin + this.body.rotation),
+      this.Lmotor.deltaOrigin *
+      Math.cos(this.Lmotor.rotationOrigin + this.body.rotation),
       y +
-        this.Lmotor.deltaOrigin *
-          Math.sin(this.Lmotor.rotationOrigin + this.body.rotation)
+      this.Lmotor.deltaOrigin *
+      Math.sin(this.Lmotor.rotationOrigin + this.body.rotation)
     );
     this.Rmotor.wheel.setPosition(
       x +
-        this.Rmotor.deltaOrigin *
-          Math.cos(this.Rmotor.rotationOrigin + this.body.rotation),
+      this.Rmotor.deltaOrigin *
+      Math.cos(this.Rmotor.rotationOrigin + this.body.rotation),
       y +
-        this.Rmotor.deltaOrigin *
-          Math.sin(this.Rmotor.rotationOrigin + this.body.rotation)
+      this.Rmotor.deltaOrigin *
+      Math.sin(this.Rmotor.rotationOrigin + this.body.rotation)
     );
   }
 
@@ -940,21 +940,21 @@ class maqueenLite {
 
     this.Lmotor.wheel.setPosition(
       this.body.x +
-        this.Lmotor.deltaOrigin *
-          Math.cos((deg / 180) * Math.PI + this.Lmotor.rotationOrigin),
+      this.Lmotor.deltaOrigin *
+      Math.cos((deg / 180) * Math.PI + this.Lmotor.rotationOrigin),
       this.body.y +
-        this.Lmotor.deltaOrigin *
-          Math.sin((deg / 180) * Math.PI + this.Lmotor.rotationOrigin)
+      this.Lmotor.deltaOrigin *
+      Math.sin((deg / 180) * Math.PI + this.Lmotor.rotationOrigin)
     );
     this.Lmotor.wheel.setAngle(deg);
 
     this.Rmotor.wheel.setPosition(
       this.body.x +
-        this.Rmotor.deltaOrigin *
-          Math.cos((deg / 180) * Math.PI + this.Rmotor.rotationOrigin),
+      this.Rmotor.deltaOrigin *
+      Math.cos((deg / 180) * Math.PI + this.Rmotor.rotationOrigin),
       this.body.y +
-        this.Rmotor.deltaOrigin *
-          Math.sin((deg / 180) * Math.PI + this.Rmotor.rotationOrigin)
+      this.Rmotor.deltaOrigin *
+      Math.sin((deg / 180) * Math.PI + this.Rmotor.rotationOrigin)
     );
     this.Rmotor.wheel.setAngle(deg);
   }
@@ -1032,6 +1032,8 @@ class maqueenPlus {
 
     this.RLed = new rgbLed(scene, this.body, 20, -45);
 
+
+
     //mise en place de l'i2c
     this.i2c = new i2cPlus(this);
 
@@ -1063,19 +1065,19 @@ class maqueenPlus {
     this.body.setPosition(x, y);
     this.Lmotor.wheel.setPosition(
       x +
-        this.Lmotor.deltaOrigin *
-          Math.cos(this.Lmotor.rotationOrigin + this.body.rotation),
+      this.Lmotor.deltaOrigin *
+      Math.cos(this.Lmotor.rotationOrigin + this.body.rotation),
       y +
-        this.Lmotor.deltaOrigin *
-          Math.sin(this.Lmotor.rotationOrigin + this.body.rotation)
+      this.Lmotor.deltaOrigin *
+      Math.sin(this.Lmotor.rotationOrigin + this.body.rotation)
     );
     this.Rmotor.wheel.setPosition(
       x +
-        this.Rmotor.deltaOrigin *
-          Math.cos(this.Rmotor.rotationOrigin + this.body.rotation),
+      this.Rmotor.deltaOrigin *
+      Math.cos(this.Rmotor.rotationOrigin + this.body.rotation),
       y +
-        this.Rmotor.deltaOrigin *
-          Math.sin(this.Rmotor.rotationOrigin + this.body.rotation)
+      this.Rmotor.deltaOrigin *
+      Math.sin(this.Rmotor.rotationOrigin + this.body.rotation)
     );
   }
 
@@ -1084,21 +1086,21 @@ class maqueenPlus {
 
     this.Lmotor.wheel.setPosition(
       this.body.x +
-        this.Lmotor.deltaOrigin *
-          Math.cos((deg / 180) * Math.PI + this.Lmotor.rotationOrigin),
+      this.Lmotor.deltaOrigin *
+      Math.cos((deg / 180) * Math.PI + this.Lmotor.rotationOrigin),
       this.body.y +
-        this.Lmotor.deltaOrigin *
-          Math.sin((deg / 180) * Math.PI + this.Lmotor.rotationOrigin)
+      this.Lmotor.deltaOrigin *
+      Math.sin((deg / 180) * Math.PI + this.Lmotor.rotationOrigin)
     );
     this.Lmotor.wheel.setAngle(deg);
 
     this.Rmotor.wheel.setPosition(
       this.body.x +
-        this.Rmotor.deltaOrigin *
-          Math.cos((deg / 180) * Math.PI + this.Rmotor.rotationOrigin),
+      this.Rmotor.deltaOrigin *
+      Math.cos((deg / 180) * Math.PI + this.Rmotor.rotationOrigin),
       this.body.y +
-        this.Rmotor.deltaOrigin *
-          Math.sin((deg / 180) * Math.PI + this.Rmotor.rotationOrigin)
+      this.Rmotor.deltaOrigin *
+      Math.sin((deg / 180) * Math.PI + this.Rmotor.rotationOrigin)
     );
     this.Rmotor.wheel.setAngle(deg);
   }

@@ -56,7 +56,11 @@ if _platform == "pyodide":
     i2c = I2C()
     i2c._set_i2c_device(bot_i2c)
 
-    pin13 = sim.robots[0].pin13
-    pin14 = sim.robots[0].pin14
-    pin8 = sim.robots[0].pin8
-    pin12 = sim.robots[0].pin12
+    try:
+      pin13 = sim.robots[0].pin13
+      pin14 = sim.robots[0].pin14
+      pin8 = sim.robots[0].pin8
+      pin12 = sim.robots[0].pin12
+    except:
+      pin8, pin12, pin13, pin14 = [Pin(x) for x in [8, 12, 13, 14]]
+

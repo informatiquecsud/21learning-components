@@ -18,3 +18,7 @@ function createAlarm(duration) {
 }
 
 setAlarm = createAlarm(600);
+
+function beep() {
+  playTone(440, "sine", 0.2)
+}
