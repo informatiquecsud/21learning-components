@@ -1,6 +1,7 @@
 <template>
   <q-splitter v-model="vSplitterLocation" :limits="[0, 100]">
     <template v-slot:before>
+      <pre v-if="false">{{ editorFiles }}</pre>
       <q-header elevated>
         <q-toolbar>
           <q-btn color="green" class="q-ma-sm" @click="runCode">Simulate<q-tooltip>
@@ -312,8 +313,11 @@ const writeFilesToFS = (files, pyodide) => {
 
 const resetWorld = async () => {
   router.push({ path: route.fullPath, query: { ...route.query, reset: true } });
-  addRevision();
-  location.reload();
+  await setTimeout(() => {
+    addRevision();
+    location.reload();
+
+  }, 50);
 };
 
 
@@ -348,7 +352,7 @@ const addRevision = async () => {
   localStorage.setItem("editorFiles", JSON.stringify(editorFiles.value));
 
   writeFilesToFS(editorFiles.value, pyodide);
-  console.log("files", editorFiles.value);
+  console.log("written files", editorFiles.value);
 
 };
 
@@ -487,11 +491,15 @@ const loadModules = async (prefix, files) => {
     })
       .then((res) => res.text())
       .then((text) => {
-        editorFiles.value.push({
-          path: f.path,
-          data: text,
-          show: f.show,
-        });
+        // only load the module if not already loaded
+        if (editorFiles.value.filter(thefile => thefile.path === f.path).length === 0) {
+          editorFiles.value.push({
+            path: f.path,
+            data: text,
+            show: f.show,
+          });
+
+        }
       })
       .catch((error) => {
         alert(`Unable to download module from ${uri}`);
@@ -513,11 +521,14 @@ onMounted(async () => {
   await initializePyodide();
   stdout.value = "";
 
-  if (route.query.reset) {
-    const files = localStorage.getItem('editorFiles');
-    console.log("reloading files", files);
-    editorFiles.value = JSON.parse(localStorage.getItem('editorFiles'));
-  }
+  // console.log("reset param", route.query.reset, route.query);
+  // if (route.query.reset !== undefined) {
+  //   const query = route.query;
+  //   delete query['reset'];
+  //   console.log("remove reset from query", query);
+
+  //   router.push({ path: route.fullPath, query: query });
+  // }
 
   if (route.query.main !== undefined) {
 
@@ -525,6 +536,19 @@ onMounted(async () => {
     editorFiles.value[0].revisions[0] = editorFiles.value[0].data;
   }
 
+  if (route.query.reset) {
+    const filesString = localStorage.getItem('editorFiles');
+    //console.log("reloading files", files);
+    console.log("reinit editorFiles")
+    if (filesString) {
+      const files = JSON.parse(filesString);
+      console.log("parsed editorFiles", files);
+      editorFiles.value = files;
+      const activeRevision = editorFiles.value[0].activeRevision;
+
+      editorFiles.value[0].data = editorFiles.value[0].revisions[activeRevision];
+    }
+  }
   if (route.query.vsplit !== undefined) {
     vSplitterLocation.value = Number(route.query.vsplit);
   }
