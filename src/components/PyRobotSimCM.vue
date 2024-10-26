@@ -311,9 +311,8 @@ const writeFilesToFS = (files, pyodide) => {
 };
 
 const resetWorld = async () => {
-
+  router.push({ path: route.fullPath, query: { ...route.query, reset: true } });
   addRevision();
-
   location.reload();
 };
 
@@ -513,6 +512,12 @@ onMounted(async () => {
   console.log("loading Pyodide");
   await initializePyodide();
   stdout.value = "";
+
+  if (route.query.reset) {
+    const files = localStorage.getItem('editorFiles');
+    console.log("reloading files", files);
+    editorFiles.value = JSON.parse(localStorage.getItem('editorFiles'));
+  }
 
   if (route.query.main !== undefined) {
 
