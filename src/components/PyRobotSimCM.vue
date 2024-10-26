@@ -311,6 +311,9 @@ const writeFilesToFS = (files, pyodide) => {
 };
 
 const resetWorld = async () => {
+
+  addRevision();
+
   location.reload();
 };
 
@@ -335,10 +338,7 @@ const flashCode = async () => {
     });
 };
 
-const runCode = async () => {
-  stdout.value = "";
-  stderr.value = "";
-
+const addRevision = async () => {
   let { revisions, activeRevision } = editorFiles.value[0];
 
   if (revisions[revisions.length - 1] !== editorFiles.value[0].data) {
@@ -350,6 +350,14 @@ const runCode = async () => {
 
   writeFilesToFS(editorFiles.value, pyodide);
   console.log("files", editorFiles.value);
+
+};
+
+const runCode = async () => {
+  stdout.value = "";
+  stderr.value = "";
+
+  addRevision();
 
   const code = getActiveFile(activeFile.value).data;
 
